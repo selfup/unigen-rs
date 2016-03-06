@@ -22,9 +22,7 @@ If you are running Linux, you may install the official stable binaries.
 
 ### Windows
 
-If you are using Win 7, upgrade to Windows 10.
-
-If you are running 8 or 8.1, upgrade to 10.
+If you are using Win 7, 8, or 8.1, upgrade to Windows 10.
 
 If you are running 10, go to this [PAGE](https://www.rust-lang.org/downloads.html#win-foot)
 
