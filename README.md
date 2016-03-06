@@ -12,7 +12,7 @@ If you are using a Mac (OSX), please use `homebrew` to install rust.
 
 If you prefer to not use `homebrew`, please install the official stable binaries.
 
-curl -sSf https://static.rust-lang.org/rustup.sh | sh`
+`curl -sSf https://static.rust-lang.org/rustup.sh | sh`
 
 #### Linux
 
