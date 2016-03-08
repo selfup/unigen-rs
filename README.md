@@ -6,7 +6,7 @@ The idea is to build a cli tool that can generate enough life, and *sublife* (ne
 
 Another ambitious goal, would be to set up bonding logic to create water or other compounds.
 
-The most difficult part will be setting up an electo-magnetic field. That is why we are starting with the simplest form of an EMF.
+The most difficult part will be setting up an electro-magnetic field. That is why we are starting with the simplest form of an EMF.
 
 # Rust
 
