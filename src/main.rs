@@ -10,8 +10,8 @@ fn main() {
 }
 
 fn initialize_life(b: &mut LifeBlock) -> &LifeBlock {
-    let std : [i32;2] = [0, 0];
-    b.x_y = vec![std];
+    let origin : [i32;2] = [0, 0];
+    b.x_y = vec![origin];
     b.z = vec![0];
     b
 }
