@@ -18,3 +18,15 @@ fn identify_structure(x_and_y: &mut Vec<[i32;2]>, z: &mut Vec<i32>) {
     println!("{:?}", x_and_y);
     println!("{:?}", z);
 }
+
+#[test]
+fn it_can_begin() {
+    let mut structure = LifeBlock {x_and_y: Vec::new(), z: Vec::new()};
+
+    let std : [i32;2] = [0, 0];
+
+    structure.x_and_y = vec![std];
+
+    assert_eq!(structure.x_and_y, [[0, 0]]);
+    assert_eq!(structure.z, []);
+}
