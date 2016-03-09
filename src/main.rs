@@ -1,3 +1,5 @@
+use std::io;
+
 #[derive(Debug)]
 struct LifeBlock {
     x_y:    (i32, i32),
@@ -7,11 +9,21 @@ struct LifeBlock {
 }
 
 fn main() {
+
+    println!("Size of universe. Please:");
+
+    let mut size = String::new();
+
+    io::stdin().read_line(&mut size)
+      .expect("Failed to read line");
+
+    let trimmed = size.trim().parse::<i32>().unwrap();
+
     let mut universe = vec![];
 
-    initialize_life(5, &mut universe);
+    initialize_life(trimmed, &mut universe);
 
-    println!("{:?}", universe);
+    println!("{:?}", universe.len());
 }
 
 fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
