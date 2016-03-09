@@ -24,7 +24,6 @@ fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
     }
 }
 
-
 #[test]
 fn it_can_begin() {
     let mut universe = vec![];
