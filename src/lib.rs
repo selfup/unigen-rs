@@ -1,3 +1,7 @@
+struct Nucleus {
+
+}
+
 struct Atom {
 
 }
