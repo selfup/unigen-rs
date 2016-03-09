@@ -9,13 +9,11 @@ struct LifeBlock {
 }
 
 fn main() {
-
     println!("Size of universe. Please:");
 
     let mut size = String::new();
 
-    io::stdin().read_line(&mut size)
-      .expect("Failed to read line");
+    io::stdin().read_line(&mut size).expect("Failed to read line");
 
     let trimmed = size.trim().parse::<i32>().unwrap();
 
