@@ -54,27 +54,6 @@ fn it_can_begin() {
     assert_eq!(universe[0].charge.nucleus.protons, 1);
     assert_eq!(universe[0].charge.nucleus.neutrons, 1);
 
-    assert_eq!(universe[1].x_y, (0, 0));
-    assert_eq!(universe[1].z, 1);
-
-    assert_eq!(universe[2].x_y, (0, 0));
-    assert_eq!(universe[2].z, 2);
-
-    assert_eq!(universe[6].x_y, (0, 1));
-    assert_eq!(universe[6].z, 0);
-
-    assert_eq!(universe[7].x_y, (0, 1));
-    assert_eq!(universe[7].z, 1);
-
-    assert_eq!(universe[8].x_y, (0, 1));
-    assert_eq!(universe[8].z, 2);
-
-    assert_eq!(universe[12].x_y, (0, 2));
-    assert_eq!(universe[12].z, 0);
-
-    assert_eq!(universe[13].x_y, (0, 2));
-    assert_eq!(universe[13].z, 1);
-
     assert_eq!(universe[20].x_y, (0, 3));
     assert_eq!(universe[20].z, 2);
     assert_eq!(universe[0].charge.electrons, 1);
