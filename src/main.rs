@@ -5,7 +5,6 @@ struct LifeBlock {
     x_y:    (i32, i32),
     z:      i32,
     charge: i32,
-    mag:    i32,
 }
 
 fn main() {
@@ -28,7 +27,7 @@ fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
     for v in 0..limit + 1 {
         for w in 0..limit + 1 {
             for q in 0..limit + 1 {
-                container.push(LifeBlock { x_y: (v, w), z: q, charge: 0, mag: 0 })
+                container.push(LifeBlock { x_y: (v, w), z: q, charge: 0})
             }
         }
     }
