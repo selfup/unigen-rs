@@ -14,6 +14,7 @@ fn main() {
                                  mag: 0
                               };
 
+    initialize_life(&mut block, 0, 0, 0, 0, 0);
 }
 
 fn initialize_life(b: &mut LifeBlock, x: i32, y: i32, z: i32, c: i32, m: i32) -> &LifeBlock {
