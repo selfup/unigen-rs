@@ -5,4 +5,5 @@ struct Nucleus {
 
 struct Atom {
     electrons: i32,
+    nucleus: Nucleus,
 }
