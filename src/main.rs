@@ -1,3 +1,4 @@
+#[derive(Debug)]
 struct LifeBlock {
     x_y: (i32, i32),
     z:       Vec<i32>,
@@ -6,15 +7,18 @@ struct LifeBlock {
 }
 
 fn main() {
+    let mut universe = vec![];
 
-    let mut block = LifeBlock {
-                                 x_y: (0, 0),
-                                 z: Vec::new(),
-                                 charge: 0,
-                                 mag: 0
-                              };
+    for v in 0..10 {
+        universe.push(LifeBlock {
+                                     x_y: (v, 0),
+                                     z: Vec::new(),
+                                     charge: 0,
+                                     mag: 0
+                                 });
+    }
 
-    initialize_life(&mut block, 0, 0, 0, 0, 0);
+    println!("{:?}", universe);
 }
 
 fn initialize_life(b: &mut LifeBlock, x: i32, y: i32, z: i32, c: i32, m: i32) -> &LifeBlock {
