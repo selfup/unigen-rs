@@ -9,7 +9,7 @@ struct LifeBlock {
 fn main() {
     let mut universe = vec![];
 
-    initialize_life(50, &mut universe);
+    initialize_life(5, &mut universe);
 
     println!("{:?}", universe);
 }
@@ -17,6 +17,9 @@ fn main() {
 fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
     for v in 0..limit + 1 {
         container.push(LifeBlock { x_y: (v, 0), z: vec![0], charge: 0, mag: 0 });
+        container.push(LifeBlock { x_y: (0, v), z: vec![0], charge: 0, mag: 0 });
+        container.push(LifeBlock { x_y: (0, 0), z: vec![v], charge: 0, mag: 0 });
+        container.push(LifeBlock { x_y: (v, v), z: vec![v], charge: 0, mag: 0 });
     }
 }
 
@@ -30,4 +33,9 @@ fn it_can_begin() {
     assert_eq!(universe[0].z, [0]);
     assert_eq!(universe[0].charge, 0);
     assert_eq!(universe[0].mag, 0);
+
+    assert_eq!(universe[4].x_y, (1, 0));
+    assert_eq!(universe[4].z, [0]);
+    assert_eq!(universe[4].charge, 0);
+    assert_eq!(universe[4].mag, 0);
 }
