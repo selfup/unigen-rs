@@ -26,9 +26,9 @@ fn main() {
 
     initialize_life(trimmed, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
+    is_field_neutral(&mut neut, &mut prot, &mut elec, trimmed);
 
-    println!("{:?}", universe.len());
-    // println!("{:?}", calc_one[0]);
+    println!("Size of Universe: {:?}", universe.len());
 }
 
 fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
@@ -53,8 +53,13 @@ fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i32>, p: &mut Vec<i32>, e: 
     e[0] = input.par_iter().map(|i| i.charge.electrons).sum();
 }
 
-fn is_field_generated_neutral(n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>) {
-
+fn is_field_neutral(n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>, u: i32) {
+    let size = (u + 1) * (u + 1) * (u + 1);
+    if n[0] == size && p[0] == size && e[0] == size {
+        println!("NEUTRAL");
+    } else {
+        println!("NOT NEUTRAL");
+    }
 }
 
 #[test]
