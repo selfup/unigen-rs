@@ -22,7 +22,7 @@ fn main() {
 
     initialize_life(trimmed, &mut universe);
 
-    println!("{:?}", universe);
+    println!("{:?}", universe.len());
 }
 
 fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
@@ -50,6 +50,9 @@ fn it_can_begin() {
 
     assert_eq!(universe[0].x_y, (0, 0));
     assert_eq!(universe[0].z, 0);
+    assert_eq!(universe[0].charge.electrons, 1);
+    assert_eq!(universe[0].charge.nucleus.protons, 1);
+    assert_eq!(universe[0].charge.nucleus.neutrons, 1);
 
     assert_eq!(universe[1].x_y, (0, 0));
     assert_eq!(universe[1].z, 1);
@@ -74,4 +77,7 @@ fn it_can_begin() {
 
     assert_eq!(universe[20].x_y, (0, 3));
     assert_eq!(universe[20].z, 2);
+    assert_eq!(universe[0].charge.electrons, 1);
+    assert_eq!(universe[0].charge.nucleus.protons, 1);
+    assert_eq!(universe[0].charge.nucleus.neutrons, 1);
 }
