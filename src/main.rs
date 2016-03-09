@@ -1,6 +1,9 @@
+extern crate rayon;
+
 use std::io;
 
 mod atom;
+
 
 #[derive(Debug)]
 struct LifeBlock {
@@ -11,18 +14,21 @@ struct LifeBlock {
 
 fn main() {
     println!("Size of universe. Please:");
-
     let mut size = String::new();
 
     io::stdin().read_line(&mut size).expect("Failed to read line");
-
     let trimmed = size.trim().parse::<i32>().unwrap();
 
     let mut universe = vec![];
+    let mut neut = vec![0];
+    let mut prot = vec![0];
+    let mut elec = vec![0];
 
     initialize_life(trimmed, &mut universe);
+    particles(&mut universe, &mut neut, &mut prot, &mut elec);
 
     println!("{:?}", universe.len());
+    // println!("{:?}", calc_one[0]);
 }
 
 fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
@@ -38,6 +44,17 @@ fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
             }
         }
     }
+}
+
+use rayon::prelude::*;
+fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>) {
+    n[0] = input.par_iter().map(|i| i.charge.nucleus.neutrons).sum();
+    p[0] = input.par_iter().map(|i| i.charge.nucleus.protons).sum();
+    e[0] = input.par_iter().map(|i| i.charge.electrons).sum();
+}
+
+fn is_field_generated_neutral(n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>) {
+
 }
 
 #[test]

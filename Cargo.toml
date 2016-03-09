@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["selfup <boudinot.regis@yahoo.com>"]
 
 [dependencies]
+rayon = "0.3.1"
