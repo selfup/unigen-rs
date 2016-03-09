@@ -36,6 +36,8 @@ There are two different builds. Visual Studio ready builds, and GNU gcc builds.
 
 The GNU gcc build is the more mature one.
 
+Try to use the GNU build.
+
 ```
 There are two prominent ABIs in use on Windows: the native (MSVC) ABI used by Visual Studio, and the GNU ABI used by the GCC toolchain. Which version of Rust you need depends largely on what C/C++ libraries you want to interoperate with: for interop with software produced by Visual Studio use the MSVC build of Rust; for interop with GNU software built using the MinGW/MSYS2 toolchain use the GNU build.
 
