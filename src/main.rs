@@ -22,7 +22,7 @@ fn main() {
 
     initialize_life(trimmed, &mut universe);
 
-    println!("{:?}", universe.len());
+    println!("{:?}", universe);
 }
 
 fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
