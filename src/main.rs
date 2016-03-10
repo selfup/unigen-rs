@@ -11,7 +11,7 @@ mod atom;
 struct LifeBlock {
     x_y: (i32, i32),
     z: i32,
-    charge: &'static str,
+    charge: i32,
     atom: atom::Atom,
 }
 
@@ -42,7 +42,7 @@ fn initialize_life(limit: i32, uni: &mut Vec<LifeBlock>) {
                 let n2: i32 = rand::thread_rng().gen_range(0, 118);
                 let n3: i32 = rand::thread_rng().gen_range(0, 118);
                 uni.push(LifeBlock { x_y: (v, w), z: q,
-                           charge: "tbd",
+                           charge: 0,
                            atom: atom::Atom { electrons: n1,
                                                 nucleus: atom::Nucleus {protons: n2, neutrons: n3}
                                             }
@@ -68,6 +68,18 @@ fn charge_of_field(p: &mut  Vec<i32>, e: &mut Vec<i32>, u: i32) {
     } else {
         println!("field is anionic");
     }
+}
+
+fn atom_charge(input: &mut Vec<LifeBlock>) {
+    input.par_iter().map( |i|
+        if i.atom.nucleus.protons == i.atom.electrons {
+            i.charge = 0
+        } else if i.atom.nucleus.protons > i.atom.electrons {
+            i.charge = 1
+        } else {
+            i.charge = -1
+        }
+    );
 }
 
 #[test]
