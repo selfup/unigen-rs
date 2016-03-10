@@ -29,7 +29,6 @@ fn main() {
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
     is_field_neutral(&mut neut, &mut prot, &mut elec, trimmed);
 
-    println!("Size of Universe: {:?}", universe);
     println!("Size of Universe: {:?}", universe.len());
 }
 
@@ -78,13 +77,7 @@ fn it_can_begin() {
 
     assert_eq!(universe[0].x_y, (0, 0));
     assert_eq!(universe[0].z, 0);
-    assert_eq!(universe[0].charge.electrons, 1);
-    assert_eq!(universe[0].charge.nucleus.protons, 1);
-    assert_eq!(universe[0].charge.nucleus.neutrons, 1);
 
     assert_eq!(universe[20].x_y, (0, 3));
     assert_eq!(universe[20].z, 2);
-    assert_eq!(universe[0].charge.electrons, 1);
-    assert_eq!(universe[0].charge.nucleus.protons, 1);
-    assert_eq!(universe[0].charge.nucleus.neutrons, 1);
 }
