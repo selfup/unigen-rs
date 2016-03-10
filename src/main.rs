@@ -33,18 +33,20 @@ fn main() {
     println!("Size of Universe: {:?}", universe.len());
 }
 
-fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
-    let num: i32 = rand::thread_rng().gen_range(0, 118);
+fn initialize_life(limit: i32, uni: &mut Vec<LifeBlock>) {
 
     for v in 0..limit + 1 {
         for w in 0..limit + 1 {
             for q in 0..limit + 1 {
-                container.push(LifeBlock { x_y: (v, w), z: q,
-                               charge: atom::Atom { electrons: num,
-                                                    nucleus: atom::Nucleus {protons: num, neutrons: num}
-                                                  }
-                                         }
-                              )
+                let n1: i32 = rand::thread_rng().gen_range(0, 118);
+                let n2: i32 = rand::thread_rng().gen_range(0, 118);
+                let n3: i32 = rand::thread_rng().gen_range(0, 118);
+                uni.push(LifeBlock { x_y: (v, w), z: q,
+                           charge: atom::Atom { electrons: n1,
+                                                nucleus: atom::Nucleus {protons: n2, neutrons: n3}
+                                              }
+                                     }
+                          )
             }
         }
     }
