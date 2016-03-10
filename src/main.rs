@@ -73,7 +73,7 @@ fn charge_of_field(p: &mut  Vec<i32>, e: &mut Vec<i32>, u: i32) {
 
     if p[0] == size && e[0] == size {
         println!("field has a neutral charge");
-    } else if p[0] > size && e[0] < p[0] {
+    } else if (p[0] > size) && (e[0] < p[0]) {
         println!("field is ionic");
     } else {
         println!("field is anionic");
