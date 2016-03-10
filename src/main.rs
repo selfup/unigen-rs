@@ -1,9 +1,10 @@
 extern crate rayon;
+extern crate rand;
 
 use std::io;
+use rand::Rng;
 
 mod atom;
-
 
 #[derive(Debug)]
 struct LifeBlock {
@@ -28,16 +29,19 @@ fn main() {
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
     is_field_neutral(&mut neut, &mut prot, &mut elec, trimmed);
 
+    println!("Size of Universe: {:?}", universe);
     println!("Size of Universe: {:?}", universe.len());
 }
 
 fn initialize_life(limit: i32, container: &mut Vec<LifeBlock>) {
+    let num: i32 = rand::thread_rng().gen_range(0, 118);
+
     for v in 0..limit + 1 {
         for w in 0..limit + 1 {
             for q in 0..limit + 1 {
                 container.push(LifeBlock { x_y: (v, w), z: q,
-                               charge: atom::Atom { electrons: 1,
-                                                    nucleus: atom::Nucleus {protons: 1, neutrons: 1}
+                               charge: atom::Atom { electrons: num,
+                                                    nucleus: atom::Nucleus {protons: num, neutrons: num}
                                                   }
                                          }
                               )
