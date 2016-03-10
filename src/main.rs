@@ -28,6 +28,7 @@ fn main() {
     initialize_life(trimmed, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
     is_field_neutral(&mut neut, &mut prot, &mut elec, trimmed);
+    charge_of_field(&mut prot, &mut elec, trimmed);
 
     println!("Size of Universe: {:?}", universe.len());
 }
@@ -64,6 +65,18 @@ fn is_field_neutral(n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>, u: i32
         println!("NEUTRAL");
     } else {
         println!("NOT NEUTRAL");
+    }
+}
+
+fn charge_of_field(p: &mut  Vec<i32>, e: &mut Vec<i32>, u: i32) {
+    let size = (u + 1) * (u + 1) * (u + 1);
+
+    if p[0] == size && e[0] == size {
+        println!("field has a neutral charge");
+    } else if p[0] > size && e[0] < p[0] {
+        println!("field is ionic");
+    } else {
+        println!("field is anionic");
     }
 }
 
