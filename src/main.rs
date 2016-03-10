@@ -3,14 +3,16 @@ extern crate rand;
 
 use std::io;
 use rand::Rng;
+use rayon::prelude::*;
 
 mod atom;
 
 #[derive(Debug)]
 struct LifeBlock {
-    x_y:    (i32, i32),
-    z:      i32,
-    charge: atom::Atom,
+    x_y: (i32, i32),
+    z: i32,
+    charge: &'static str,
+    atom: atom::Atom,
 }
 
 fn main() {
@@ -27,14 +29,12 @@ fn main() {
 
     initialize_life(trimmed, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
-    is_field_neutral(&mut neut, &mut prot, &mut elec, trimmed);
     charge_of_field(&mut prot, &mut elec, trimmed);
 
     println!("Size of Universe: {:?}", universe.len());
 }
 
 fn initialize_life(limit: i32, uni: &mut Vec<LifeBlock>) {
-
     for v in 0..limit + 1 {
         for w in 0..limit + 1 {
             for q in 0..limit + 1 {
@@ -42,35 +42,25 @@ fn initialize_life(limit: i32, uni: &mut Vec<LifeBlock>) {
                 let n2: i32 = rand::thread_rng().gen_range(0, 118);
                 let n3: i32 = rand::thread_rng().gen_range(0, 118);
                 uni.push(LifeBlock { x_y: (v, w), z: q,
-                           charge: atom::Atom { electrons: n1,
+                           charge: "tbd",
+                           atom: atom::Atom { electrons: n1,
                                                 nucleus: atom::Nucleus {protons: n2, neutrons: n3}
-                                              }
-                                     }
-                          )
+                                            }
+                                   }
+                        )
             }
         }
     }
 }
 
-use rayon::prelude::*;
 fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>) {
-    n[0] = input.par_iter().map(|i| i.charge.nucleus.neutrons).sum();
-    p[0] = input.par_iter().map(|i| i.charge.nucleus.protons).sum();
-    e[0] = input.par_iter().map(|i| i.charge.electrons).sum();
-}
-
-fn is_field_neutral(n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>, u: i32) {
-    let size = (u + 1) * (u + 1) * (u + 1);
-    if n[0] == size && p[0] == size && e[0] == size {
-        println!("NEUTRAL");
-    } else {
-        println!("NOT NEUTRAL");
-    }
+    n[0] = input.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
+    p[0] = input.par_iter().map(|i| i.atom.nucleus.protons).sum();
+    e[0] = input.par_iter().map(|i| i.atom.electrons).sum();
 }
 
 fn charge_of_field(p: &mut  Vec<i32>, e: &mut Vec<i32>, u: i32) {
     let size = (u + 1) * (u + 1) * (u + 1);
-
     if p[0] == size && e[0] == size {
         println!("field has a neutral charge");
     } else if (p[0] > size) && (e[0] < p[0]) {
