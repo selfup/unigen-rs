@@ -9,9 +9,9 @@ mod atom;
 
 #[derive(Debug)]
 struct LifeBlock{
-    x_y: (i32, i32),
-    z: i32,
-    charge: i32,
+    x_y: (i64, i64),
+    z: i64,
+    charge: i64,
     atom: atom::Atom,
 }
 
@@ -20,7 +20,7 @@ fn main() {
     let mut size = String::new();
 
     io::stdin().read_line(&mut size).expect("Failed to read line");
-    let trimmed = size.trim().parse::<i32>().unwrap();
+    let trimmed = size.trim().parse::<i64>().unwrap();
 
     let mut universe = vec![];
     let mut neut = vec![0];
@@ -35,13 +35,13 @@ fn main() {
     println!("Size of Universe: {:?}", universe.len());
 }
 
-fn initialize_life(limit: i32, uni: &mut Vec<LifeBlock>) {
+fn initialize_life(limit: i64, uni: &mut Vec<LifeBlock>) {
     for v in 0..limit + 1 {
         for w in 0..limit + 1 {
             for q in 0..limit + 1 {
-                let n1: i32 = rand::thread_rng().gen_range(0, 118);
-                let n2: i32 = rand::thread_rng().gen_range(0, 118);
-                let n3: i32 = rand::thread_rng().gen_range(0, 118);
+                let n1: i64 = rand::thread_rng().gen_range(0, 118);
+                let n2: i64 = rand::thread_rng().gen_range(0, 118);
+                let n3: i64 = rand::thread_rng().gen_range(0, 118);
                 uni.push(LifeBlock { x_y: (v, w), z: q,
                            charge: 0,
                            atom: atom::Atom { electrons: n1,
@@ -54,13 +54,13 @@ fn initialize_life(limit: i32, uni: &mut Vec<LifeBlock>) {
     }
 }
 
-fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i32>, p: &mut Vec<i32>, e: &mut Vec<i32>) {
+fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i64>, p: &mut Vec<i64>, e: &mut Vec<i64>) {
     n[0] = input.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
     p[0] = input.par_iter().map(|i| i.atom.nucleus.protons).sum();
     e[0] = input.par_iter().map(|i| i.atom.electrons).sum();
 }
 
-fn charge_of_field(p: &mut  Vec<i32>, e: &mut Vec<i32>, u: i32) {
+fn charge_of_field(p: &mut  Vec<i64>, e: &mut Vec<i64>, u: i64) {
     let size = (u + 1) * (u + 1) * (u + 1);
     if p[0] == size && e[0] == size {
         println!("field has a neutral charge");
