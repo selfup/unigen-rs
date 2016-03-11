@@ -113,3 +113,18 @@ fn atom_charge(input: &mut Vec<LifeBlock>) {
         }
     };
 }
+
+#[test]
+fn it_can_dictate_an_atoms_charge() {
+    let mut universe = vec![];
+    let mut neut = vec![0];
+    let mut prot = vec![0];
+    let mut elec = vec![0];
+
+    initialize_life(1, &mut universe);
+    particles(&mut universe, &mut neut, &mut prot, &mut elec);
+    atom_charge(&mut universe);
+
+    assert_eq!(universe.len(), 8);
+    assert_eq!(universe[0].charge, 1 || 0 || -1)
+}
