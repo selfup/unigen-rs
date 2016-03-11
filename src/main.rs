@@ -8,7 +8,7 @@ use rayon::prelude::*;
 mod atom;
 
 #[derive(Debug)]
-struct LifeBlock {
+struct LifeBlock{
     x_y: (i32, i32),
     z: i32,
     charge: i32,
@@ -30,6 +30,7 @@ fn main() {
     initialize_life(trimmed, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
     charge_of_field(&mut prot, &mut elec, trimmed);
+    atom_charge(&mut universe);
 
     println!("Size of Universe: {:?}", universe.len());
 }
@@ -71,15 +72,15 @@ fn charge_of_field(p: &mut  Vec<i32>, e: &mut Vec<i32>, u: i32) {
 }
 
 fn atom_charge(input: &mut Vec<LifeBlock>) {
-    input.par_iter().map( |i|
+    for i in input {
         if i.atom.nucleus.protons == i.atom.electrons {
-            i.charge = 0
+            i.charge = 0;
         } else if i.atom.nucleus.protons > i.atom.electrons {
-            i.charge = 1
+            i.charge = 1;
         } else {
-            i.charge = -1
+            i.charge = -1;
         }
-    );
+    };
 }
 
 #[test]
