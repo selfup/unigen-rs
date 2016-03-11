@@ -54,10 +54,41 @@ fn initialize_life(limit: i64, uni: &mut Vec<LifeBlock>) {
     }
 }
 
+#[test]
+fn it_can_begin() {
+    let mut universe = vec![];
+
+    initialize_life(5, &mut universe);
+
+    assert_eq!(universe.len(), 216);
+
+    assert_eq!(universe[0].x_y, (0, 0));
+    assert_eq!(universe[0].z, 0);
+
+    assert_eq!(universe[20].x_y, (0, 3));
+    assert_eq!(universe[20].z, 2);
+}
+
 fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i64>, p: &mut Vec<i64>, e: &mut Vec<i64>) {
     n[0] = input.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
     p[0] = input.par_iter().map(|i| i.atom.nucleus.protons).sum();
     e[0] = input.par_iter().map(|i| i.atom.electrons).sum();
+}
+
+#[test]
+fn it_can_sense_the_field() {
+    let mut universe = vec![];
+    let mut neut = vec![0];
+    let mut prot = vec![0];
+    let mut elec = vec![0];
+
+    initialize_life(1, &mut universe);
+    particles(&mut universe, &mut neut, &mut prot, &mut elec);
+
+    assert_eq!(universe.len(), 8);
+    assert_eq!(neut.len(), 1);
+    assert_eq!(prot.len(), 1);
+    assert_eq!(elec.len(), 1);
 }
 
 fn charge_of_field(p: &mut  Vec<i64>, e: &mut Vec<i64>, u: i64) {
@@ -81,19 +112,4 @@ fn atom_charge(input: &mut Vec<LifeBlock>) {
             i.charge = -1;
         }
     };
-}
-
-#[test]
-fn it_can_begin() {
-    let mut universe = vec![];
-
-    initialize_life(5, &mut universe);
-
-    assert_eq!(universe.len(), 216);
-
-    assert_eq!(universe[0].x_y, (0, 0));
-    assert_eq!(universe[0].z, 0);
-
-    assert_eq!(universe[20].x_y, (0, 3));
-    assert_eq!(universe[20].z, 2);
 }
