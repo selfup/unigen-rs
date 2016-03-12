@@ -57,14 +57,11 @@ fn initialize_life(limit: i64, uni: &mut Vec<LifeBlock>) {
 #[test]
 fn it_can_begin() {
     let mut universe = vec![];
-
     initialize_life(5, &mut universe);
 
     assert_eq!(universe.len(), 216);
-
     assert_eq!(universe[0].x_y, (0, 0));
     assert_eq!(universe[0].z, 0);
-
     assert_eq!(universe[20].x_y, (0, 3));
     assert_eq!(universe[20].z, 2);
 }
@@ -81,7 +78,6 @@ fn it_can_sense_the_field() {
     let mut neut = vec![0];
     let mut prot = vec![0];
     let mut elec = vec![0];
-
     initialize_life(1, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
 
@@ -120,11 +116,24 @@ fn it_can_dictate_an_atoms_charge() {
     let mut neut = vec![0];
     let mut prot = vec![0];
     let mut elec = vec![0];
-
-    initialize_life(1, &mut universe);
+    let mut rand_nums = vec![0];
+    let mut rando = "";
+    initialize_life(5, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
     atom_charge(&mut universe);
 
-    assert_eq!(universe.len(), 8);
-    assert_eq!(universe[0].charge, 1 || 0 || -1)
+    assert_eq!(universe.len(), 216);
+
+    for u in universe {
+        rand_nums.push(u.charge)
+    }
+
+    rand_nums.sort();
+    rand_nums.dedup();
+
+    if rand_nums.len() > 1 {
+        rando = "random"
+    }
+
+    assert_eq!(rando, "random");
 }
