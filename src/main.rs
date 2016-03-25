@@ -40,9 +40,9 @@ fn initialize_life(limit: i64, uni: &mut Vec<LifeBlock>) {
     for v in 0..limit + 1 {
         for w in 0..limit + 1 {
             for q in 0..limit + 1 {
-                let n1: i64 = rng.gen_range(0, 118);
-                let n2: i64 = rng.gen_range(0, 118);
-                let n3: i64 = rng.gen_range(0, 118);
+                let (n1, n2, n3): (i64, i64, i64) = (rng.gen_range(0, 118),
+                                                     rng.gen_range(0, 118),
+                                                     rng.gen_range(0, 118));
                 uni.push(LifeBlock { x_y: (v, w), z: q,
                            charge: 0,
                            atom: atom::Atom { electrons: n1,
@@ -66,6 +66,7 @@ fn it_can_begin() {
     assert_eq!(universe[20].x_y, (0, 3));
     assert_eq!(universe[20].z, 2);
 }
+
 
 fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i64>, p: &mut Vec<i64>, e: &mut Vec<i64>) {
     n[0] = input.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
