@@ -8,6 +8,8 @@ Another ambitious goal, would be to set up bonding logic to create water or othe
 
 The most difficult part will be setting up an electro-magnetic field. That is why we are starting with the simplest form of an EMF.
 
+Recently made a port in Javascript using websockets. You can check out the repo here [nodizy](https://github.com/selfup/nodizy)
+
 # Rust
 
 ### OSX
