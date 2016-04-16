@@ -67,7 +67,6 @@ fn it_can_begin() {
     assert_eq!(universe[20].z, 2);
 }
 
-
 fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i64>, p: &mut Vec<i64>, e: &mut Vec<i64>) {
     n[0] = input.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
     p[0] = input.par_iter().map(|i| i.atom.nucleus.protons).sum();
