@@ -3,7 +3,7 @@ extern crate rayon;
 
 use rand::Rng;
 use rayon::prelude::*;
-use std::io;
+use std::env;
 
 mod atom;
 
@@ -16,12 +16,13 @@ struct LifeBlock {
 }
 
 fn main() {
-    println!("Size of universe. Please:");
     let mut size = String::new();
+    let args: Vec<String> = env::args().collect();
 
-    io::stdin()
-        .read_line(&mut size)
-        .expect("Failed to read line");
+    if args.len() > 1 {
+        size = args[1].clone();
+    }
+
     let trimmed = size.trim().parse::<i64>().unwrap();
 
     let mut universe = vec![];
