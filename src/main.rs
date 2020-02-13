@@ -1,14 +1,14 @@
-extern crate rayon;
 extern crate rand;
+extern crate rayon;
 
-use std::io;
 use rand::Rng;
 use rayon::prelude::*;
+use std::io;
 
 mod atom;
 
 #[derive(Debug)]
-struct LifeBlock{
+struct LifeBlock {
     x_y: (i64, i64),
     z: i64,
     charge: i8,
@@ -19,7 +19,9 @@ fn main() {
     println!("Size of universe. Please:");
     let mut size = String::new();
 
-    io::stdin().read_line(&mut size).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut size)
+        .expect("Failed to read line");
     let trimmed = size.trim().parse::<i64>().unwrap();
 
     let mut universe = vec![];
@@ -43,22 +45,20 @@ fn initialize_life(limit: i64, uni: &mut Vec<LifeBlock>) {
                 let (n1, n2, n3): (i8, i8, i8) = (
                     rng.gen_range(0, 118),
                     rng.gen_range(0, 118),
-                    rng.gen_range(0, 118)
+                    rng.gen_range(0, 118),
                 );
-                uni.push(
-                    LifeBlock { 
-                        x_y: (v, w), 
-                        z: q,
-                        charge: 0,
-                        atom: atom::Atom { 
-                            electrons: n1,
-                            nucleus: atom::Nucleus {
-                                protons: n2, 
-                                neutrons: n3
-                            }
-                        }
-                    }
-                )
+                uni.push(LifeBlock {
+                    x_y: (v, w),
+                    z: q,
+                    charge: 0,
+                    atom: atom::Atom {
+                        electrons: n1,
+                        nucleus: atom::Nucleus {
+                            protons: n2,
+                            neutrons: n3,
+                        },
+                    },
+                })
             }
         }
     }
@@ -97,7 +97,7 @@ fn it_can_sense_the_field() {
     assert_eq!(elec.len(), 1);
 }
 
-fn charge_of_field(p: &mut  Vec<i8>, e: &mut Vec<i8>, u: i64) {
+fn charge_of_field(p: &mut Vec<i8>, e: &mut Vec<i8>, u: i64) {
     let size = (u + 1) * (u + 1) * (u + 1);
     let true_size = size as i8;
     if p[0] == true_size && e[0] == true_size {
@@ -118,7 +118,7 @@ fn atom_charge(input: &mut Vec<LifeBlock>) {
         } else {
             i.charge = -1;
         }
-    };
+    }
 }
 
 #[test]
