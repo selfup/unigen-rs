@@ -1,8 +1,6 @@
 extern crate rand;
-extern crate rayon;
 
 use rand::Rng;
-use rayon::prelude::*;
 use std::env;
 
 mod atom;

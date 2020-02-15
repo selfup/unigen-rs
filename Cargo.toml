@@ -4,5 +4,4 @@ version = "0.1.0"
 authors = ["selfup <boudinot.regis@yahoo.com>"]
 
 [dependencies]
-rayon = "1.3.0"
 rand = "0.7.3"
