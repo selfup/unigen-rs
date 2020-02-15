@@ -7,9 +7,9 @@ mod atom;
 
 #[derive(Debug)]
 struct LifeBlock {
-    x_y: (i64, i64),
-    z: i64,
-    charge: i8,
+    x_y: (u64, u64),
+    z: u64,
+    charge: i16,
     atom: atom::Atom,
 }
 
@@ -21,7 +21,7 @@ fn main() {
         size = args[1].clone();
     }
 
-    let trimmed = size.trim().parse::<i64>().unwrap();
+    let trimmed = size.trim().parse::<u64>().unwrap();
 
     let mut universe = vec![];
     let mut neut = vec![0];
@@ -36,12 +36,12 @@ fn main() {
     println!("Size of Universe: {:?}", universe.len());
 }
 
-fn initialize_life(limit: i64, uni: &mut Vec<LifeBlock>) {
+fn initialize_life(limit: u64, uni: &mut Vec<LifeBlock>) {
     let mut rng = rand::thread_rng();
     for v in 0..limit + 1 {
         for w in 0..limit + 1 {
             for q in 0..limit + 1 {
-                let (n1, n2, n3): (i8, i8, i8) = (
+                let (n1, n2, n3): (i16, i16, i16) = (
                     rng.gen_range(0, 118),
                     rng.gen_range(0, 118),
                     rng.gen_range(0, 118),
@@ -75,7 +75,7 @@ fn it_can_begin() {
     assert_eq!(universe[20].z, 2);
 }
 
-fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i8>, p: &mut Vec<i8>, e: &mut Vec<i8>) {
+fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i16>, p: &mut Vec<i16>, e: &mut Vec<i16>) {
     n[0] = input.iter().map(|i| i.atom.nucleus.neutrons).sum();
     p[0] = input.iter().map(|i| i.atom.nucleus.protons).sum();
     e[0] = input.iter().map(|i| i.atom.electrons).sum();
@@ -96,9 +96,9 @@ fn it_can_sense_the_field() {
     assert_eq!(elec.len(), 1);
 }
 
-fn charge_of_field(p: &mut Vec<i8>, e: &mut Vec<i8>, u: i64) {
+fn charge_of_field(p: &mut Vec<i16>, e: &mut Vec<i16>, u: u64) {
     let size = (u + 1) * (u + 1) * (u + 1);
-    let true_size = size as i8;
+    let true_size = size as i16;
     if p[0] == true_size && e[0] == true_size {
         println!("field has a neutral charge");
     } else if (p[0] > true_size) && (e[0] < p[0]) {
