@@ -78,9 +78,9 @@ fn it_can_begin() {
 }
 
 fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i8>, p: &mut Vec<i8>, e: &mut Vec<i8>) {
-    n[0] = input.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
-    p[0] = input.par_iter().map(|i| i.atom.nucleus.protons).sum();
-    e[0] = input.par_iter().map(|i| i.atom.electrons).sum();
+    n[0] = input.iter().map(|i| i.atom.nucleus.neutrons).sum();
+    p[0] = input.iter().map(|i| i.atom.nucleus.protons).sum();
+    e[0] = input.iter().map(|i| i.atom.electrons).sum();
 }
 
 #[test]
