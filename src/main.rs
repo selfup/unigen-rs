@@ -38,14 +38,15 @@ fn main() {
 
 fn initialize_life(limit: u64, uni: &mut Vec<LifeBlock>) {
     let mut rng = rand::thread_rng();
-    for v in 0..limit + 1 {
-        for w in 0..limit + 1 {
-            for q in 0..limit + 1 {
+    for v in 0..limit {
+        for w in 0..limit {
+            for q in 0..limit {
                 let (n1, n2, n3): (i16, i16, i16) = (
                     rng.gen_range(0, 118),
                     rng.gen_range(0, 118),
                     rng.gen_range(0, 118),
                 );
+
                 uni.push(LifeBlock {
                     x_y: (v, w),
                     z: q,
@@ -68,11 +69,11 @@ fn it_can_begin() {
     let mut universe = vec![];
     initialize_life(5, &mut universe);
 
-    assert_eq!(universe.len(), 216);
+    assert_eq!(universe.len(), 125);
     assert_eq!(universe[0].x_y, (0, 0));
     assert_eq!(universe[0].z, 0);
-    assert_eq!(universe[20].x_y, (0, 3));
-    assert_eq!(universe[20].z, 2);
+    assert_eq!(universe[20].x_y, (0, 4));
+    assert_eq!(universe[20].z, 0);
 }
 
 fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i16>, p: &mut Vec<i16>, e: &mut Vec<i16>) {
@@ -90,7 +91,7 @@ fn it_can_sense_the_field() {
     initialize_life(1, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
 
-    assert_eq!(universe.len(), 8);
+    assert_eq!(universe.len(), 1);
     assert_eq!(neut.len(), 1);
     assert_eq!(prot.len(), 1);
     assert_eq!(elec.len(), 1);
@@ -132,7 +133,7 @@ fn it_can_dictate_an_atoms_charge() {
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
     atom_charge(&mut universe);
 
-    assert_eq!(universe.len(), 216);
+    assert_eq!(universe.len(), 125);
 
     for u in universe {
         rand_nums.push(u.charge)
