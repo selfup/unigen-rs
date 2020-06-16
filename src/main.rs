@@ -85,9 +85,11 @@ fn particles(input: &mut Vec<LifeBlock>, n: &mut Vec<i16>, p: &mut Vec<i16>, e: 
 #[test]
 fn it_can_sense_the_field() {
     let mut universe = vec![];
+
     let mut neut = vec![0];
     let mut prot = vec![0];
     let mut elec = vec![0];
+
     initialize_life(1, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
 
@@ -124,11 +126,14 @@ fn atom_charge(input: &mut Vec<LifeBlock>) {
 #[test]
 fn it_can_dictate_an_atoms_charge() {
     let mut universe = vec![];
+
     let mut neut = vec![0];
     let mut prot = vec![0];
     let mut elec = vec![0];
     let mut rand_nums = vec![0];
+    
     let mut rando = "";
+
     initialize_life(5, &mut universe);
     particles(&mut universe, &mut neut, &mut prot, &mut elec);
     atom_charge(&mut universe);
