@@ -17,11 +17,17 @@ The most difficult part will be setting up an electro-magnetic field. That is wh
 Example Use:
 
 ```bash
-oxidizy (master) $ time cargo run -q --release 200
-field is anionic
-Size of Universe: 8000000
+$ ./scripts/rel.run.sh
++ UNIVERSE_SIZE=600
++ cargo build -q --release
++ cargo run -q --release 600
+Building Universe..
+Universe built..
+Checking the charge..
+Field is Anionic
+Size of Universe: 216000000
 
-real    0m0.317s
-user    0m0.233s
-sys     0m0.085s
+real    0m5.752s
+user    0m0.000s
+sys     0m0.000s
 ```
