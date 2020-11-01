@@ -92,10 +92,10 @@ fn it_can_sense_the_field() {
     let mut proton: [i16; 1] = [0];
     let mut electron: [i16; 1] = [0];
 
-    initialize_universe(1, &mut universe);
+    initialize_universe(2, &mut universe);
     particles(&mut universe, &mut neturon, &mut proton, &mut electron);
 
-    assert_eq!(universe.len(), 1);
+    assert_eq!(universe.len(), 8);
     assert_eq!(neturon.len(), 1);
     assert_eq!(proton.len(), 1);
     assert_eq!(electron.len(), 1);
