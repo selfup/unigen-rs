@@ -11,7 +11,7 @@ pub struct Nucleus {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub struct LifeBlock {
+pub struct Block {
     pub x: u64,
     pub y: u64,
     pub z: u64,
@@ -25,5 +25,5 @@ pub struct Grid {
     pub y: u64,
     pub z: u64,
     pub charge: i16,
-    pub block: LifeBlock,
+    pub block: Block,
 }

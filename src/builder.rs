@@ -3,13 +3,13 @@ use rayon::prelude::*;
 
 mod core;
 
-pub fn initialize_universe(parsed_size: u64, uni: &mut Vec<core::LifeBlock>) -> Vec<core::LifeBlock> {
+pub fn initialize_universe(parsed_size: u64, uni: &mut Vec<core::Block>) -> Vec<core::Block> {
     for x in 0..parsed_size {
         for y in 0..parsed_size {
             for z in 0..parsed_size {                
                 let (electrons, protons, neutrons): (i16, i16, i16) = (0, 0, 0);
 
-                uni.push(core::LifeBlock {
+                uni.push(core::Block {
                     x,
                     y,
                     z,
@@ -26,15 +26,11 @@ pub fn initialize_universe(parsed_size: u64, uni: &mut Vec<core::LifeBlock>) -> 
         }
     }
 
-    // tradiontional lock is slow because of access serialization backpressure
-    // let semaphoric_universe = Mutex::new(uni);
-    // (0..(parsed_size * parsed_size * parsed_size)).into_par_iter().for_each_init(|| rand::thread_rng(), |rng, i| {
-
-    let uni_copy = uni.clone();
+    let uni_copy: Vec<core::Block> = uni.clone();
 
     println!("Threads: {}", rayon::current_num_threads());
 
-    let chunk_size = (parsed_size) as usize;
+    let chunk_size: usize = (parsed_size) as usize;
 
     uni.par_chunks_mut(chunk_size).for_each_init(|| rand::thread_rng(), |rng, blocks| {
         let (electrons, protons, neutrons): (i16, i16, i16) = (
@@ -54,19 +50,19 @@ pub fn initialize_universe(parsed_size: u64, uni: &mut Vec<core::LifeBlock>) -> 
 }
 
 pub fn charge_of_field(proton: &mut [i16; 1], electron: &mut [i16; 1], u: u64) {
-    let size = u * u * u;
-    let true_size = size as i16;
+    let size: u64 = u * u * u;
+    let cast_size: i16 = size as i16;
     
-    if proton[0] == true_size && electron[0] == true_size {
+    if proton[0] == cast_size && electron[0] == cast_size {
         println!("Field is Netural");
-    } else if (proton[0] > true_size) && (electron[0] < proton[0]) {
+    } else if (proton[0] > cast_size) && (electron[0] < proton[0]) {
         println!("Field is Ionic");
     } else {
         println!("Field is Anionic");
     }
 }
 
-pub fn atom_charge(universe: &mut Vec<core::LifeBlock>) {
+pub fn atom_charge(universe: &mut Vec<core::Block>) {
     for block in universe {
         if block.atom.nucleus.protons == block.atom.electrons {
             block.charge = 0;
@@ -80,18 +76,22 @@ pub fn atom_charge(universe: &mut Vec<core::LifeBlock>) {
 
 #[test]
 fn it_can_begin() {
-    let mut universe = vec![];
+    let mut universe: Vec<core::Block> = vec![];
     
     initialize_universe(5, &mut universe);
 
     assert_eq!(universe.len(), 125);
-    assert_eq!(universe[0].x_y, (0, 0));
+    
+    assert_eq!(universe[0].x, 0);
+    assert_eq!(universe[0].y, 0);
     assert_eq!(universe[0].z, 0);
-    assert_eq!(universe[20].x_y, (0, 4));
+
+    assert_eq!(universe[20].x, 0);
+    assert_eq!(universe[20].y, 4);
     assert_eq!(universe[20].z, 0);
 }
 
-pub fn particles(universe: &mut Vec<core::LifeBlock>, neutron: &mut [i16; 1], proton: &mut [i16; 1], electron: &mut [i16; 1]) {
+pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [i16; 1], proton: &mut [i16; 1], electron: &mut [i16; 1]) {
     neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
     proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons).sum();
     electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
@@ -99,12 +99,12 @@ pub fn particles(universe: &mut Vec<core::LifeBlock>, neutron: &mut [i16; 1], pr
 
 #[test]
 fn it_can_infer_the_charge_of_an_atom() {
-    let mut universe = vec![];
+    let mut universe: Vec<core::Block> = vec![];
     
     let mut neturon: [i16; 1] = [0];
     let mut proton: [i16; 1] = [0];
     let mut electron: [i16; 1] = [0];
-    let mut rand_nums = vec![0];
+    let mut rand_nums: Vec<i16> = vec![0];
     
     let mut rando = "";
     
@@ -130,7 +130,7 @@ fn it_can_infer_the_charge_of_an_atom() {
 
 #[test]
 fn it_can_sense_the_field() {
-    let mut universe = vec![];
+    let mut universe: Vec<core::Block> = vec![];
 
     let mut neturon: [i16; 1] = [0];
     let mut proton: [i16; 1] = [0];
