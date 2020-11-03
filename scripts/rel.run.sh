@@ -2,7 +2,7 @@
 
 set -euox pipefail
 
-UNIVERSE_SIZE=600
+UNIVERSE_SIZE=700
 
 cargo build -q --release
 

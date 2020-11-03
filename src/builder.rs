@@ -3,20 +3,15 @@ use rayon::prelude::*;
 
 mod core;
 
-pub fn initialize_universe(parsed_size: u64, uni: &mut Vec<core::LifeBlock>) {
-    let mut rng = rand::thread_rng();
-
+pub fn initialize_universe(parsed_size: u64, uni: &mut Vec<core::LifeBlock>) -> Vec<core::LifeBlock> {
     for x in 0..parsed_size {
         for y in 0..parsed_size {
-            for z in 0..parsed_size {
-                let (electrons, protons, neutrons): (i16, i16, i16) = (
-                    rng.gen_range(0, 118),
-                    rng.gen_range(0, 118),
-                    rng.gen_range(0, 118),
-                );
+            for z in 0..parsed_size {                
+                let (electrons, protons, neutrons): (i16, i16, i16) = (0, 0, 0);
 
                 uni.push(core::LifeBlock {
-                    x_y: (x, y),
+                    x,
+                    y,
                     z,
                     charge: 0,
                     atom: core::Atom {
@@ -30,6 +25,32 @@ pub fn initialize_universe(parsed_size: u64, uni: &mut Vec<core::LifeBlock>) {
             }
         }
     }
+
+    // tradiontional lock is slow because of access serialization backpressure
+    // let semaphoric_universe = Mutex::new(uni);
+    // (0..(parsed_size * parsed_size * parsed_size)).into_par_iter().for_each_init(|| rand::thread_rng(), |rng, i| {
+
+    let uni_copy = uni.clone();
+
+    println!("Threads: {}", rayon::current_num_threads());
+
+    let chunk_size = (parsed_size) as usize;
+
+    uni.par_chunks_mut(chunk_size).for_each_init(|| rand::thread_rng(), |rng, blocks| {
+        let (electrons, protons, neutrons): (i16, i16, i16) = (
+            rng.gen_range(0, 118),
+            rng.gen_range(0, 118),
+            rng.gen_range(0, 118),
+        );
+
+        for block in blocks {
+            block.atom.electrons = electrons;
+            block.atom.nucleus.protons = protons;
+            block.atom.nucleus.neutrons = neutrons;
+        }
+    });
+
+    uni_copy
 }
 
 pub fn charge_of_field(proton: &mut [i16; 1], electron: &mut [i16; 1], u: u64) {

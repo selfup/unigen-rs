@@ -21,7 +21,8 @@ fn main() {
     let mut proton: [i16; 1] = [0];
     let mut electron: [i16; 1] = [0];
 
-    builder::initialize_universe(parsed_size, &mut universe);
+    universe = builder::initialize_universe(parsed_size, &mut universe);
+    
     builder::particles(&mut universe, &mut neturon, &mut proton, &mut electron);
 
     println!("Universe built..\nChecking the charge..");
