@@ -12,23 +12,24 @@ fn main() {
         size = args[1].clone();
     }
 
-    let parsed_size = size.trim().parse::<u64>().unwrap();
+    let parsed_size = size.trim().parse::<u32>().unwrap();
 
     println!("Building Universe..");
 
     let mut universe = vec![];
-    let mut neturon: [i16; 1] = [0];
-    let mut proton: [i16; 1] = [0];
-    let mut electron: [i16; 1] = [0];
+    let mut neturon: [u32; 1] = [0];
+    let mut proton: [u32; 1] = [0];
+    let mut electron: [u32; 1] = [0];
 
-    universe = builder::initialize_universe(parsed_size, &mut universe);
+    let mut generated_universe = builder::initialize_universe(parsed_size, &mut universe);
     
-    builder::particles(&mut universe, &mut neturon, &mut proton, &mut electron);
+    builder::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
 
-    println!("Universe built..\nChecking the charge..");
+    println!("Snapshot..\n\n{:?}\n", &generated_universe[0]);
+    println!("Universe built!\nChecking the charge..");
 
     builder::charge_of_field(&mut proton, &mut electron, parsed_size);
-    builder::atom_charge(&mut universe);
+    builder::atom_charge(&mut generated_universe);
 
-    println!("Size of Universe: {:?}", universe.len());
+    println!("Size of Universe: {:?}", generated_universe.len());
 }

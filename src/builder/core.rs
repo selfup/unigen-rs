@@ -1,29 +1,20 @@
 #[derive(Debug, Copy, Clone)]
 pub struct Atom {
-    pub electrons: i16,
+    pub electrons: u32,
     pub nucleus: Nucleus,
 }
 
 #[derive(Debug, Copy, Clone)]
 pub struct Nucleus {
-    pub protons: i16,
-    pub neutrons: i16,
+    pub protons: u32,
+    pub neutrons: u32,
 }
 
 #[derive(Debug, Copy, Clone)]
 pub struct Block {
-    pub x: u64,
-    pub y: u64,
-    pub z: u64,
-    pub charge: i16,
+    pub x: u32,
+    pub y: u32,
+    pub z: u32,
+    pub charge: i8,
     pub atom: Atom,
-}
-
-#[derive(Debug, Copy, Clone)]
-pub struct Grid {
-    pub x: u64,
-    pub y: u64,
-    pub z: u64,
-    pub charge: i16,
-    pub block: Block,
 }

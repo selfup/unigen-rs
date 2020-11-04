@@ -17,17 +17,22 @@ The most difficult part will be setting up an electro-magnetic field. That is wh
 Example Use:
 
 ```bash
-$ ./scripts/rel.run.sh
-+ UNIVERSE_SIZE=600
+$ ./scripts/rel.run.sh 600
 + cargo build -q --release
 + cargo run -q --release 600
 Building Universe..
-Universe built..
+Threads: 16
+Snapshot..
+
+Block { x: 0, y: 0, z: 0, charge: 0, atom: Atom { electrons: 7, nucleus: Nucleus { protons: 115, neutrons: 
+26 } } }
+
+Universe built!
 Checking the charge..
-Field is Anionic
+Field is Ionic
 Size of Universe: 216000000
 
-real    0m5.752s
+real    0m5.133s
 user    0m0.000s
 sys     0m0.000s
 ```
