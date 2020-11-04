@@ -20,12 +20,6 @@ echo '
 ---
 '
 
-./scripts/run.sh $ROOT_SIZE
-
-echo '
----
-'
-
 ./scripts/rel.run.sh $ROOT_SIZE
 
 echo "
