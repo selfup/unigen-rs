@@ -4,12 +4,15 @@ use rayon::prelude::*;
 mod core;
 
 pub fn initialize_universe(parsed_size: u32, uni: &mut Vec<core::Block>) -> Vec<core::Block> {
+    let mut id: u32 = 0;
+
     for x in 0..parsed_size {
         for y in 0..parsed_size {
             for z in 0..parsed_size {                
                 let (electrons, protons, neutrons): (u32, u32, u32) = (0, 0, 0);
 
                 uni.push(core::Block {
+                    id,
                     x,
                     y,
                     z,
@@ -21,15 +24,52 @@ pub fn initialize_universe(parsed_size: u32, uni: &mut Vec<core::Block>) -> Vec<
                             neutrons,
                         },
                     },
-                })
+                });
+
+                id += 1;
             }
         }
     }
 
-    let mut uni_copy: Vec<core::Block> = uni.clone();
-
     println!("Threads: {}", rayon::current_num_threads());
 
+    uni.clone()
+}
+
+pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
+    neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
+    proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons).sum();
+    electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
+}
+
+pub fn charge_of_field(proton: &mut [u32; 1], electron: &mut [u32; 1], u: u32) {
+    let size: u32 = u * u * u;
+    let cast_size: u32 = size as u32;
+    
+    if proton[0] == cast_size && electron[0] == cast_size {
+        println!("Field is Netural");
+    } else if (proton[0] > cast_size) && (electron[0] < proton[0]) {
+        println!("Field is Cationic");
+    } else {
+        println!("Field is Anionic");
+    }
+}
+
+pub fn atom_charge(universe: &mut Vec<core::Block>) {
+    for block in universe {
+        if block.atom.nucleus.protons == block.atom.electrons {
+            block.charge = 0;
+        } else if block.atom.nucleus.protons > block.atom.electrons {
+            block.charge = 1;
+        } else {
+            block.charge = -1;
+        }
+    }
+}
+
+pub fn tick(parsed_size: u32, universe: &mut Vec<core::Block>) -> Vec<core::Block> {
+    let mut uni_copy: Vec<core::Block> = universe.clone();
+    
     let chunk_size: usize = (parsed_size) as usize;
 
     uni_copy.par_chunks_mut(chunk_size).for_each_init(|| rand::thread_rng(), |rng, blocks| {
@@ -47,37 +87,6 @@ pub fn initialize_universe(parsed_size: u32, uni: &mut Vec<core::Block>) -> Vec<
     });
 
     uni_copy
-}
-
-pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
-    neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
-    proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons).sum();
-    electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
-}
-
-pub fn charge_of_field(proton: &mut [u32; 1], electron: &mut [u32; 1], u: u32) {
-    let size: u32 = u * u * u;
-    let cast_size: u32 = size as u32;
-    
-    if proton[0] == cast_size && electron[0] == cast_size {
-        println!("Field is Netural");
-    } else if (proton[0] > cast_size) && (electron[0] < proton[0]) {
-        println!("Field is Ionic");
-    } else {
-        println!("Field is Anionic");
-    }
-}
-
-pub fn atom_charge(universe: &mut Vec<core::Block>) {
-    for block in universe {
-        if block.atom.nucleus.protons == block.atom.electrons {
-            block.charge = 0;
-        } else if block.atom.nucleus.protons > block.atom.electrons {
-            block.charge = 1;
-        } else {
-            block.charge = -1;
-        }
-    }
 }
 
 #[test]
