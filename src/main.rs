@@ -2,6 +2,7 @@ extern crate rand;
 
 use std::env;
 use bevy::prelude::*;
+use bevy::render::pass::ClearColor;
 
 mod builder;
 use builder::Blocks;
@@ -11,24 +12,15 @@ fn main() {
         .add_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
+        .add_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .run();
 }
 
-/// set up a simple 3D scene
 fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    // // add entities to the world
-    // commands
-    //     // plane
-    //     .spawn(PbrComponents {
-    //         mesh: meshes.add(Mesh::from(shape::Plane { size: 10.0 })),
-    //         material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
-    //         ..Default::default()
-    //     });
-
     let mut size = String::new();
     let args: Vec<String> = env::args().collect();
 
@@ -63,12 +55,16 @@ fn setup(
         let x = block.x as f32;
         let z = block.z as f32;
 
-        let r = block.charge as f32;
+        let mut r = block.charge as f32;
+
+        if r < 0.0 {
+            r = 2.0;
+        }
 
         commands
         // cube
             .spawn(PbrComponents {
-                mesh: meshes.add(Mesh::from(shape::Cube { size: 0.2 })),
+                mesh: meshes.add(Mesh::from(shape::Icosphere { radius: 0.15, subdivisions: 1 })),
                 material: materials.add(Color::rgb(r, 0.7, 0.6).into()),
                 transform: Transform::from_translation(Vec3::new(x, y, z)),
                 ..Default::default()
