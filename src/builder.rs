@@ -1,7 +1,7 @@
 use rand::Rng;
 use rayon::prelude::*;
 
-mod core;
+pub mod core;
 
 // Blocks builds blocks..
 pub struct Blocks {}
@@ -61,13 +61,7 @@ impl Blocks {
     
     pub fn atom_charge(universe: &mut Vec<core::Block>) {
         for block in universe {
-            if block.atom.nucleus.protons == block.atom.electrons {
-                block.charge = 0;
-            } else if block.atom.nucleus.protons > block.atom.electrons {
-                block.charge = 1;
-            } else {
-                block.charge = -1;
-            }
+            calculate_charge(block);
         }
     }
     
@@ -94,6 +88,15 @@ impl Blocks {
     }    
 }
 
+pub fn calculate_charge(block: &mut core::Block) {
+    if block.atom.nucleus.protons == block.atom.electrons {
+        block.charge = 0;
+    } else if block.atom.nucleus.protons > block.atom.electrons {
+        block.charge = 1;
+    } else {
+        block.charge = -1;
+    }
+}
 
 #[test]
 fn it_can_begin() {

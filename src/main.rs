@@ -7,11 +7,15 @@ use bevy::render::pass::ClearColor;
 mod builder;
 use builder::Blocks;
 
+use rand::Rng;
+
 fn main() {
     App::build()
         .add_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
+        .add_system(update_block_atoms.system())
+        .add_system(update_block_spheres.system())
         .add_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .run();
 }
@@ -21,6 +25,80 @@ fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
+
+    let blocks = generate_universe();
+
+    for block in blocks {
+        let y = block.y as f32;
+        let x = block.x as f32;
+        let z = block.z as f32;
+
+        let mut r = block.charge as f32;
+
+        if r < 0.0 {
+            r = 2.0;
+        }
+
+        commands
+            .spawn(PbrComponents {
+                mesh: meshes.add(Mesh::from(shape::Icosphere { radius: 0.15, subdivisions: 1 })),
+                material: materials.add(Color::rgb(r, 0.7, 0.6).into()),
+                transform: Transform::from_translation(Vec3::new(x, y, z)),
+                ..Default::default()
+            })
+            .with(block);
+    }
+
+    commands
+        .spawn(LightComponents {
+            transform: Transform::from_translation(Vec3::new(4.0, 8.0, 4.0)),
+            ..Default::default()
+        })
+        .spawn(Camera3dComponents {
+            transform: Transform::from_translation(Vec3::new(-60.0, 50.0, 50.0))
+                .looking_at(Vec3::default(), Vec3::unit_y()),
+            ..Default::default()
+        });
+}
+
+fn update_block_spheres(
+    mut materials: ResMut<Assets<StandardMaterial>>,
+    mut query: Query<(&mut Transform, &Handle<StandardMaterial>, &builder::core::Block)>,
+) {
+    for (mut _transform, material_handle, block) in query.iter_mut() {
+        let mut material = materials.get_mut(material_handle).unwrap();
+        
+        let mut r = block.charge as f32;
+
+        if r < 0.0 {
+            r = 2.0;
+        }
+
+        material.albedo = Color::rgb(r, 0.7, 0.6).into();
+    }
+}
+
+fn update_block_atoms(
+    mut query: Query<&mut builder::core::Block>,
+) {
+    for mut block in query.iter_mut() {
+        let mut rng = rand::thread_rng();
+
+        let (electrons, protons, neutrons): (u32, u32, u32) = (
+            rng.gen_range(0, 118),
+            rng.gen_range(0, 118),
+            rng.gen_range(0, 118),
+        );
+
+        block.atom.electrons = electrons;
+        block.atom.nucleus.protons = protons;
+        block.atom.nucleus.neutrons = neutrons;
+
+        builder::calculate_charge(&mut block);
+    }
+}
+
+fn generate_universe() -> Vec<builder::core::Block> {
     let mut size = String::new();
     let args: Vec<String> = env::args().collect();
 
@@ -50,37 +128,5 @@ fn setup(
 
     println!("Size of Universe: {:?}", generated_universe.len());
 
-    for block in generated_universe {
-        let y = block.y as f32;
-        let x = block.x as f32;
-        let z = block.z as f32;
-
-        let mut r = block.charge as f32;
-
-        if r < 0.0 {
-            r = 2.0;
-        }
-
-        commands
-        // cube
-            .spawn(PbrComponents {
-                mesh: meshes.add(Mesh::from(shape::Icosphere { radius: 0.15, subdivisions: 1 })),
-                material: materials.add(Color::rgb(r, 0.7, 0.6).into()),
-                transform: Transform::from_translation(Vec3::new(x, y, z)),
-                ..Default::default()
-            });
-    }
-
-    commands
-        // light
-        .spawn(LightComponents {
-            transform: Transform::from_translation(Vec3::new(4.0, 8.0, 4.0)),
-            ..Default::default()
-        })
-        // camera
-        .spawn(Camera3dComponents {
-            transform: Transform::from_translation(Vec3::new(-40.0, 30.0, 30.0))
-                .looking_at(Vec3::default(), Vec3::unit_y()),
-            ..Default::default()
-        });
+    generated_universe
 }
