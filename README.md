@@ -17,22 +17,19 @@ The most difficult part will be setting up an electro-magnetic field. That is wh
 Example Use:
 
 ```bash
-$ ./scripts/rel.run.sh 600
+$ ./scripts/rel.run.sh 30
 + cargo build -q --release
-+ cargo run -q --release 600
++ cargo run -q --release 30
 Building Universe..
 Threads: 16
 Snapshot..
 
-Block { x: 0, y: 0, z: 0, charge: 0, atom: Atom { electrons: 7, nucleus: Nucleus { protons: 115, neutrons: 
-26 } } }
+Block { id: 0, x: 0, y: 0, z: 0, charge: 0, atom: Atom { electrons: 20, nucleus: Nucleus { protons: 62, neutrons: 26 } } }
 
 Universe built!
 Checking the charge..
-Field is Ionic
-Size of Universe: 216000000
-
-real    0m5.133s
-user    0m0.000s
-sys     0m0.000s
+Field is Anionic
+Size of Universe: 27000
 ```
+
+TODO: Add screen shot of Bevy rendering the universe
