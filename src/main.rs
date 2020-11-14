@@ -16,7 +16,8 @@ fn main() {
         .add_startup_system(setup.system())
         .add_system(update_odd_block_atoms.system())
         .add_system(update_even_block_atoms.system())
-        .add_system(update_block_spheres.system())
+        .add_system(update_odd_block_spheres.system())
+        .add_system(update_even_block_spheres.system())
         .add_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .run();
 }
@@ -62,20 +63,41 @@ fn setup(
         });
 }
 
-fn update_block_spheres(
+fn update_even_block_spheres(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut query: Query<(&mut Transform, &Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
     for (mut _transform, material_handle, block) in query.iter_mut() {
-        let mut material = materials.get_mut(material_handle).unwrap();
-        
-        let mut r = block.charge as f32;
+        if block.id % 2 == 0 {
+            let mut material = materials.get_mut(material_handle).unwrap();
+            
+            let mut r = block.charge as f32;
 
-        if r < 0.0 {
-            r = 2.0;
+            if r < 0.0 {
+                r = 2.0;
+            }
+
+            material.albedo = Color::rgb(r, 0.7, 0.6).into();
         }
+    }
+}
 
-        material.albedo = Color::rgb(r, 0.7, 0.6).into();
+fn update_odd_block_spheres(
+    mut materials: ResMut<Assets<StandardMaterial>>,
+    mut query: Query<(&mut Transform, &Handle<StandardMaterial>, &builder::core::Block)>,
+) {
+    for (mut _transform, material_handle, block) in query.iter_mut() {
+        if block.id % 2 != 0 {
+            let mut material = materials.get_mut(material_handle).unwrap();
+            
+            let mut r = block.charge as f32;
+
+            if r < 0.0 {
+                r = 2.0;
+            }
+
+            material.albedo = Color::rgb(r, 0.7, 0.6).into();
+        }
     }
 }
 
