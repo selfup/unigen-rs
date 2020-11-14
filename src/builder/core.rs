@@ -12,6 +12,7 @@ pub struct Nucleus {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Block {
+    pub id: u32,
     pub x: u32,
     pub y: u32,
     pub z: u32,
