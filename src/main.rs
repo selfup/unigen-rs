@@ -69,7 +69,7 @@ fn update_even_block_spheres(
     mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
     for (material_handle, block) in query.iter_mut() {
-        if block.id % 2 == 0 {
+        if block.id % 2.0 == 0.0 {
             update_albedo(&mut materials, material_handle, block);
         }
     }
@@ -80,7 +80,7 @@ fn update_odd_block_spheres(
     mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
     for (material_handle, block) in query.iter_mut() {
-        if block.id % 2 != 0 {
+        if block.id % 2.0 != 0.0 {
             update_albedo(&mut materials, material_handle, block);
         }
     }
@@ -106,7 +106,7 @@ fn update_odd_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
     for mut block in query.iter_mut() {
-        if block.id % 2 != 0 {
+        if block.id % 2.0 != 0.0 {
             let mut rng = rand::thread_rng();
     
             builder::mutate_blocks_with_new_particles(&mut rng, &mut block);
@@ -120,7 +120,7 @@ fn update_even_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
     for mut block in query.iter_mut() {
-        if block.id % 2 == 0 {
+        if block.id % 2.0 == 0.0 {
             let mut rng = rand::thread_rng();
     
             builder::mutate_blocks_with_new_particles(&mut rng, &mut block);
@@ -155,7 +155,7 @@ fn generate_universe() -> Vec<builder::core::Block> {
     println!("Snapshot..\n\n{:?}\n", &generated_universe[0]);
     println!("Universe built!\nChecking the charge..");
 
-    Blocks::charge_of_field(&mut proton, &mut electron, parsed_size);
+    Blocks::charge_of_field(&mut proton, &mut electron, parsed_size as u32);
     Blocks::atom_charge(&mut generated_universe);
 
     println!("Size of Universe: {:?}", generated_universe.len());
