@@ -15,12 +15,3 @@ echo "
 $(date)"
 
 ./scripts/test.sh
-
-echo '
----
-'
-
-./scripts/rel.run.sh $ROOT_SIZE
-
-echo "
-$(date)"

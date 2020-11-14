@@ -126,30 +126,13 @@ fn it_can_infer_the_charge_of_an_atom() {
     let mut neturon: [u32; 1] = [0];
     let mut proton: [u32; 1] = [0];
     let mut electron: [u32; 1] = [0];
-    let mut rand_nums: Vec<i8> = vec![0];
-    
-    let mut rando = "";
     
     let mut generated_universe: Vec<core::Block> = Blocks::initialize_universe(5, &mut universe);
+    Blocks::tick(5, &mut generated_universe);
     Blocks::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
     Blocks::atom_charge(&mut generated_universe);
     
     assert_eq!(generated_universe.len(), 125);
-
-    for u in generated_universe {
-        rand_nums.push(u.charge)
-    }
-
-    println!("{:?}", rand_nums);
-
-    rand_nums.sort();
-    rand_nums.dedup();
-
-    if rand_nums.len() > 1 {
-        rando = "random"
-    }
-
-    assert_eq!(rando, "random");
 }
 
 #[test]

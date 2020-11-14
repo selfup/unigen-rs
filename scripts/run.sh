@@ -4,4 +4,4 @@ set -euox pipefail
 
 cargo build
 
-time cargo run $1
+cargo run $1
