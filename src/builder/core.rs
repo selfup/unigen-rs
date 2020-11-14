@@ -19,7 +19,6 @@ pub struct Proton {
 impl Proton {
     pub fn new() -> Proton {
         Proton {
-            //build quarks here
             quarks: (Quark::new(0,0), Quark::new(1,1), Quark::new(2,1))
         }
     }
