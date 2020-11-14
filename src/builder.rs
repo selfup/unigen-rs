@@ -4,7 +4,6 @@ use rayon::prelude::*;
 
 pub mod core;
 
-// Blocks builds blocks..
 pub struct Blocks {}
 
 impl Blocks {
