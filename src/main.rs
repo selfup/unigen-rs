@@ -19,9 +19,12 @@ fn main() {
         .add_system(update_even_block_atoms.system())
         .add_system(update_odd_block_spheres.system())
         .add_system(update_even_block_spheres.system())
+        .add_system(camera_movement.system())
         .add_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .run();
 }
+
+struct CameraMatcher();
 
 fn setup(
     mut commands: Commands,
@@ -61,7 +64,8 @@ fn setup(
             transform: Transform::from_translation(Vec3::new(-60.0, 50.0, 50.0))
                 .looking_at(Vec3::default(), Vec3::unit_y()),
             ..Default::default()
-        });
+        })
+        .with(CameraMatcher());
 }
 
 fn update_even_block_spheres(
@@ -99,7 +103,7 @@ fn update_albedo(
         r = 2.0;
     }
 
-    material.albedo = Color::rgb(r, 0.7, 0.6).into();
+    material.albedo = Color::rgb(r, 0.0, 1.0).into();
 }
 
 fn update_odd_block_atoms(
@@ -155,10 +159,62 @@ fn generate_universe() -> Vec<builder::core::Block> {
     println!("Snapshot..\n\n{:?}\n", &generated_universe[0]);
     println!("Universe built!\nChecking the charge..");
 
-    Blocks::charge_of_field(&mut proton, &mut electron, parsed_size);
+    Blocks::charge_of_field(&mut proton, &mut electron, parsed_size as u32);
     Blocks::atom_charge(&mut generated_universe);
 
     println!("Size of Universe: {:?}", generated_universe.len());
 
     generated_universe
+}
+
+fn camera_movement(
+    time: Res<Time>,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut query: Query<(&mut Transform, &mut CameraMatcher)>,
+) {
+    let input_dir = get_input_dir(keyboard_input);
+
+    if input_dir.length() > 0. {
+        for (mut transform,  _camera) in query.iter_mut() {
+            let input_dir = (transform.rotation * input_dir).normalize();
+ 
+            transform.translation += input_dir * time.delta_seconds * 10.0;
+        }
+    }
+}
+
+fn get_input_dir(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {
+    let mut input_dir = Vec3::default();
+
+    if keyboard_input.pressed(KeyCode::W) {
+        let forward = Vec3::unit_z();
+        input_dir -= forward;
+    }
+
+    if keyboard_input.pressed(KeyCode::S) {
+        let forward = Vec3::unit_z();
+        input_dir += forward;
+    }
+
+    if keyboard_input.pressed(KeyCode::A) {
+        let right = Vec3::unit_x();
+        input_dir -= right;
+    }
+
+    if keyboard_input.pressed(KeyCode::D) {
+        let right = Vec3::unit_x();
+        input_dir += right;
+    }
+
+    if keyboard_input.pressed(KeyCode::Space) {
+        let up = Vec3::unit_y();
+        input_dir += up;
+    }
+    
+    if keyboard_input.pressed(KeyCode::LShift) {
+        let up = Vec3::unit_y();
+        input_dir -= up;
+    }
+
+    input_dir
 }

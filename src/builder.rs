@@ -14,6 +14,9 @@ impl Blocks {
             for y in 0..parsed_size {
                 for z in 0..parsed_size {                
                     let (electrons, protons, neutrons): (u32, u32, u32) = (0, 0, 0);
+
+                    let generated_protons = core::Protons::new(protons);
+                    let generated_neutrons = core::Neutrons::new(neutrons);
     
                     uni.push(core::Block {
                         id,
@@ -24,8 +27,8 @@ impl Blocks {
                         atom: core::Atom {
                            electrons,
                             nucleus: core::Nucleus {
-                                protons,
-                                neutrons,
+                                protons: generated_protons,
+                                neutrons: generated_neutrons,
                             },
                         },
                     });
@@ -41,8 +44,8 @@ impl Blocks {
     }
     
     pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
-        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
-        proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons).sum();
+        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons.count).sum();
+        proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons.count).sum();
         electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
     }
     
@@ -81,9 +84,9 @@ impl Blocks {
 }
 
 pub fn calculate_charge(block: &mut core::Block) {
-    if block.atom.nucleus.protons == block.atom.electrons {
+    if block.atom.nucleus.protons.count == block.atom.electrons {
         block.charge = 0;
-    } else if block.atom.nucleus.protons > block.atom.electrons {
+    } else if block.atom.nucleus.protons.count > block.atom.electrons {
         block.charge = 1;
     } else {
         block.charge = -1;
@@ -98,8 +101,8 @@ pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: 
     );
 
     block.atom.electrons = electrons;
-    block.atom.nucleus.protons = protons;
-    block.atom.nucleus.neutrons = neutrons;
+    block.atom.nucleus.protons = core::Protons::new(protons);
+    block.atom.nucleus.neutrons = core::Neutrons::new(neutrons);
 }
 
 #[test]
@@ -110,13 +113,13 @@ fn it_can_begin() {
 
     assert_eq!(universe.len(), 125);
     
-    assert_eq!(universe[0].x, 0);
-    assert_eq!(universe[0].y, 0);
-    assert_eq!(universe[0].z, 0);
+    assert_eq!(universe[0].x,0);
+    assert_eq!(universe[0].y,0);
+    assert_eq!(universe[0].z,0);
 
-    assert_eq!(universe[20].x, 0);
+    assert_eq!(universe[20].x,0);
     assert_eq!(universe[20].y, 4);
-    assert_eq!(universe[20].z, 0);
+    assert_eq!(universe[20].z,0);
 }
 
 #[test]
