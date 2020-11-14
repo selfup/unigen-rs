@@ -11,17 +11,13 @@ pub struct Nucleus {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub struct Proton {
-    //Protons need up, up, down quarks
-    pub quarks: (Quark, Quark, Quark),
-}
-
-impl Proton {
-    pub fn new() -> Proton {
-        Proton {
-            quarks: (Quark::new(0,0), Quark::new(1,1), Quark::new(2,1))
-        }
-    }
+pub struct Block {
+    pub id: u32,
+    pub x: u32,
+    pub y: u32,
+    pub z: u32,
+    pub charge: i8,
+    pub atom: Atom,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -42,19 +38,17 @@ impl Protons {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub enum Neutron {
-    //Neutrons need up, down, down quarks
-    //pub quarks(Quark, Quark, Quark)
+pub struct Proton {
+    //Protons need up, up, down quarks
+    pub quarks: (Quark, Quark, Quark),
 }
 
-#[derive(Debug, Copy, Clone)]
-pub struct Block {
-    pub id: u32,
-    pub x: u32,
-    pub y: u32,
-    pub z: u32,
-    pub charge: i8,
-    pub atom: Atom,
+impl Proton {
+    pub fn new() -> Proton {
+        Proton {
+            quarks: (Quark::new(0,0), Quark::new(1,1), Quark::new(2,1))
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -117,8 +111,13 @@ impl ElectricCharge {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub struct Baryons {}
+pub enum Neutron {
+    //Neutrons need up, down, down quarks
+    //pub quarks(Quark, Quark, Quark)
+}
 
+#[derive(Debug, Copy, Clone)]
+pub struct Baryons {}
 
 #[derive(Debug, Copy, Clone)]
 pub struct Fermion {
