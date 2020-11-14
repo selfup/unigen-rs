@@ -7,7 +7,7 @@ pub struct Atom {
 #[derive(Debug, Copy, Clone)]
 pub struct Nucleus {
     pub protons: Protons,
-    pub neutrons: u32,
+    pub neutrons: Neutrons,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -47,6 +47,36 @@ impl Proton {
     pub fn new() -> Proton {
         Proton {
             quarks: (Quark::new(0,0), Quark::new(1,1), Quark::new(2,1))
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Neutrons {
+    pub count: u32,
+    pub neutrons: [Neutron; 118],
+}
+
+impl Neutrons {
+    pub fn new(count: u32) -> Neutrons {
+        let neutrons = [Neutron::new(); 118];
+        
+        Neutrons {
+            count, 
+            neutrons,
+        }
+    }
+}
+#[derive(Debug, Copy, Clone)]
+pub struct Neutron {
+    //Neutrons need up, down, down quarks
+    pub quarks: (Quark, Quark, Quark),
+}
+
+impl Neutron {
+    pub fn new() -> Neutron {
+        Neutron {
+            quarks: (Quark::new(0,1), Quark::new(1,0), Quark::new(2,0))
         }
     }
 }
@@ -110,11 +140,7 @@ impl ElectricCharge {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
-pub enum Neutron {
-    //Neutrons need up, down, down quarks
-    //pub quarks(Quark, Quark, Quark)
-}
+
 
 #[derive(Debug, Copy, Clone)]
 pub struct Baryons {}

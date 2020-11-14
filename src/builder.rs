@@ -16,6 +16,7 @@ impl Blocks {
                     let (electrons, protons, neutrons): (u32, u32, u32) = (0, 0, 0);
 
                     let generated_protons = core::Protons::new(protons);
+                    let generated_neutrons = core::Neutrons::new(neutrons);
     
                     uni.push(core::Block {
                         id,
@@ -27,7 +28,7 @@ impl Blocks {
                            electrons,
                             nucleus: core::Nucleus {
                                 protons: generated_protons,
-                                neutrons,
+                                neutrons: generated_neutrons,
                             },
                         },
                     });
@@ -43,7 +44,7 @@ impl Blocks {
     }
     
     pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
-        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons).sum();
+        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons.count).sum();
         proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons.count).sum();
         electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
     }
@@ -101,7 +102,7 @@ pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: 
 
     block.atom.electrons = electrons;
     block.atom.nucleus.protons = core::Protons::new(protons);
-    block.atom.nucleus.neutrons = neutrons;
+    block.atom.nucleus.neutrons = core::Neutrons::new(neutrons);
 }
 
 #[test]
