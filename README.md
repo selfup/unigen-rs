@@ -4,11 +4,15 @@ An ambitious project to mimic the smaller things in life.
 
 This is how I learned rust.
 
-The idea is to build a cli tool that can generate enough life, and _sublife_ (neutrons, protons, electrons), that when you give the tool atomic weights, it can "generate" appropriate elements.
+The idea was to build a cli tool that can generate enough life, and _sublife_ (neutrons, protons, electrons), that when you give the tool atomic weights, it can "generate" appropriate elements.
+
+Now it uses Bevy and it's amazing ECS system to constantly iterate and update atoms on the fly with new particles.
 
 Another ambitious goal, would be to set up bonding logic to create water or other compounds.
 
 The most difficult part will be setting up an electro-magnetic field. That is why we are starting with the simplest form of an electro magnetic field.
+
+More to come :rocket:
 
 ---
 
@@ -32,4 +36,4 @@ Field is Anionic
 Size of Universe: 27000
 ```
 
-TODO: Add screen shot of Bevy rendering the universe
+![image](https://user-images.githubusercontent.com/9837366/99133467-5dfd2680-25d7-11eb-9377-de7feb36336d.png)
