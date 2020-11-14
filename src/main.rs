@@ -14,7 +14,8 @@ fn main() {
         .add_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
-        .add_system(update_block_atoms.system())
+        .add_system(update_odd_block_atoms.system())
+        .add_system(update_even_block_atoms.system())
         .add_system(update_block_spheres.system())
         .add_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .run();
@@ -51,7 +52,7 @@ fn setup(
 
     commands
         .spawn(LightComponents {
-            transform: Transform::from_translation(Vec3::new(4.0, 8.0, 4.0)),
+            transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
             ..Default::default()
         })
         .spawn(Camera3dComponents {
@@ -78,23 +79,47 @@ fn update_block_spheres(
     }
 }
 
-fn update_block_atoms(
+fn update_odd_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
     for mut block in query.iter_mut() {
-        let mut rng = rand::thread_rng();
+        if block.id % 2 != 0 {
+            let mut rng = rand::thread_rng();
+    
+            let (electrons, protons, neutrons): (u32, u32, u32) = (
+                rng.gen_range(0, 118),
+                rng.gen_range(0, 118),
+                rng.gen_range(0, 118),
+            );
+    
+            block.atom.electrons = electrons;
+            block.atom.nucleus.protons = protons;
+            block.atom.nucleus.neutrons = neutrons;
+    
+            builder::calculate_charge(&mut block);
+        }
+    }
+}
 
-        let (electrons, protons, neutrons): (u32, u32, u32) = (
-            rng.gen_range(0, 118),
-            rng.gen_range(0, 118),
-            rng.gen_range(0, 118),
-        );
-
-        block.atom.electrons = electrons;
-        block.atom.nucleus.protons = protons;
-        block.atom.nucleus.neutrons = neutrons;
-
-        builder::calculate_charge(&mut block);
+fn update_even_block_atoms(
+    mut query: Query<&mut builder::core::Block>,
+) {
+    for mut block in query.iter_mut() {
+        if block.id % 2 == 0 {
+            let mut rng = rand::thread_rng();
+    
+            let (electrons, protons, neutrons): (u32, u32, u32) = (
+                rng.gen_range(0, 118),
+                rng.gen_range(0, 118),
+                rng.gen_range(0, 118),
+            );
+    
+            block.atom.electrons = electrons;
+            block.atom.nucleus.protons = protons;
+            block.atom.nucleus.neutrons = neutrons;
+    
+            builder::calculate_charge(&mut block);
+        }
     }
 }
 
