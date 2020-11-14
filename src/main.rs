@@ -7,6 +7,7 @@ use bevy::render::pass::ClearColor;
 mod builder;
 use builder::Blocks;
 
+#[allow(unused_imports)]
 use rand::Rng;
 
 fn main() {
@@ -65,40 +66,40 @@ fn setup(
 
 fn update_even_block_spheres(
     mut materials: ResMut<Assets<StandardMaterial>>,
-    mut query: Query<(&mut Transform, &Handle<StandardMaterial>, &builder::core::Block)>,
+    mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
-    for (mut _transform, material_handle, block) in query.iter_mut() {
+    for (material_handle, block) in query.iter_mut() {
         if block.id % 2 == 0 {
-            let mut material = materials.get_mut(material_handle).unwrap();
-            
-            let mut r = block.charge as f32;
-
-            if r < 0.0 {
-                r = 2.0;
-            }
-
-            material.albedo = Color::rgb(r, 0.7, 0.6).into();
+            update_albedo(&mut materials, material_handle, block);
         }
     }
 }
 
 fn update_odd_block_spheres(
     mut materials: ResMut<Assets<StandardMaterial>>,
-    mut query: Query<(&mut Transform, &Handle<StandardMaterial>, &builder::core::Block)>,
+    mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
-    for (mut _transform, material_handle, block) in query.iter_mut() {
+    for (material_handle, block) in query.iter_mut() {
         if block.id % 2 != 0 {
-            let mut material = materials.get_mut(material_handle).unwrap();
-            
-            let mut r = block.charge as f32;
-
-            if r < 0.0 {
-                r = 2.0;
-            }
-
-            material.albedo = Color::rgb(r, 0.7, 0.6).into();
+            update_albedo(&mut materials, material_handle, block);
         }
     }
+}
+
+fn update_albedo(
+    materials: &mut ResMut<Assets<StandardMaterial>>,
+    material_handle: &Handle<StandardMaterial>,
+    block: &builder::core::Block,
+) {
+    let mut material = materials.get_mut(material_handle).unwrap();
+            
+    let mut r = block.charge as f32;
+
+    if r < 0.0 {
+        r = 2.0;
+    }
+
+    material.albedo = Color::rgb(r, 0.7, 0.6).into();
 }
 
 fn update_odd_block_atoms(
@@ -108,15 +109,7 @@ fn update_odd_block_atoms(
         if block.id % 2 != 0 {
             let mut rng = rand::thread_rng();
     
-            let (electrons, protons, neutrons): (u32, u32, u32) = (
-                rng.gen_range(0, 118),
-                rng.gen_range(0, 118),
-                rng.gen_range(0, 118),
-            );
-    
-            block.atom.electrons = electrons;
-            block.atom.nucleus.protons = protons;
-            block.atom.nucleus.neutrons = neutrons;
+            builder::mutate_blocks_with_new_particles(&mut rng, &mut block);
     
             builder::calculate_charge(&mut block);
         }
@@ -130,15 +123,7 @@ fn update_even_block_atoms(
         if block.id % 2 == 0 {
             let mut rng = rand::thread_rng();
     
-            let (electrons, protons, neutrons): (u32, u32, u32) = (
-                rng.gen_range(0, 118),
-                rng.gen_range(0, 118),
-                rng.gen_range(0, 118),
-            );
-    
-            block.atom.electrons = electrons;
-            block.atom.nucleus.protons = protons;
-            block.atom.nucleus.neutrons = neutrons;
+            builder::mutate_blocks_with_new_particles(&mut rng, &mut block);
     
             builder::calculate_charge(&mut block);
         }

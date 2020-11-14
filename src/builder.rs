@@ -1,4 +1,5 @@
 use rand::Rng;
+
 use rayon::prelude::*;
 
 pub mod core;
@@ -72,15 +73,7 @@ impl Blocks {
     
         uni_copy.par_chunks_mut(chunk_size).for_each_init(|| rand::thread_rng(), |rng, blocks| {
             for block in blocks {
-                let (electrons, protons, neutrons): (u32, u32, u32) = (
-                    rng.gen_range(0, 118),
-                    rng.gen_range(0, 118),
-                    rng.gen_range(0, 118),
-                );
-    
-                block.atom.electrons = electrons;
-                block.atom.nucleus.protons = protons;
-                block.atom.nucleus.neutrons = neutrons;
+                mutate_blocks_with_new_particles(rng, block);
             }
         });
     
@@ -96,6 +89,18 @@ pub fn calculate_charge(block: &mut core::Block) {
     } else {
         block.charge = -1;
     }
+}
+
+pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: &mut core::Block) {
+    let (electrons, protons, neutrons): (u32, u32, u32) = (
+        rng.gen_range(0, 118),
+        rng.gen_range(0, 118),
+        rng.gen_range(0, 118),
+    );
+
+    block.atom.electrons = electrons;
+    block.atom.nucleus.protons = protons;
+    block.atom.nucleus.neutrons = neutrons;
 }
 
 #[test]
