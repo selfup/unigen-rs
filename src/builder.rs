@@ -8,22 +8,20 @@ pub struct Blocks {}
 
 impl Blocks {
     pub fn initialize_universe(parsed_size: u32, uni: &mut Vec<core::Block>) -> Vec<core::Block> {
-        let mut id: f32 = 0.0;
+        let mut id: u32 = 0;
     
         for x in 0..parsed_size {
             for y in 0..parsed_size {
                 for z in 0..parsed_size {                
                     let (electrons, protons, neutrons): (u32, u32, u32) = (0, 0, 0);
-                    let xx = x as f32;
-                    let yy = y as f32;
-                    let zz = z as f32;
+
                     let generated_protons = core::Protons::new(protons);
     
                     uni.push(core::Block {
                         id,
-                        x: xx + 0.0,
-                        y: yy + 0.0,
-                        z: zz + 0.0,
+                        x,
+                        y,
+                        z,
                         charge: 0,
                         atom: core::Atom {
                            electrons,
@@ -34,7 +32,7 @@ impl Blocks {
                         },
                     });
     
-                    id += 0.5;
+                    id += 1;
                 }
             }
         }
@@ -114,13 +112,13 @@ fn it_can_begin() {
 
     assert_eq!(universe.len(), 125);
     
-    assert_eq!(universe[0].x, 0.0);
-    assert_eq!(universe[0].y, 0.0);
-    assert_eq!(universe[0].z, 0.0);
+    assert_eq!(universe[0].x,0);
+    assert_eq!(universe[0].y,0);
+    assert_eq!(universe[0].z,0);
 
-    assert_eq!(universe[20].x, 0.0);
-    assert_eq!(universe[20].y, 4.0);
-    assert_eq!(universe[20].z, 0.0);
+    assert_eq!(universe[20].x,0);
+    assert_eq!(universe[20].y, 4);
+    assert_eq!(universe[20].z,0);
 }
 
 #[test]

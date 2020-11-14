@@ -73,7 +73,7 @@ fn update_even_block_spheres(
     mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
     for (material_handle, block) in query.iter_mut() {
-        if block.id % 2.0 == 0.0 {
+        if block.id % 2 == 0 {
             update_albedo(&mut materials, material_handle, block);
         }
     }
@@ -84,7 +84,7 @@ fn update_odd_block_spheres(
     mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
     for (material_handle, block) in query.iter_mut() {
-        if block.id % 2.0 != 0.0 {
+        if block.id % 2 != 0 {
             update_albedo(&mut materials, material_handle, block);
         }
     }
@@ -103,14 +103,14 @@ fn update_albedo(
         r = 2.0;
     }
 
-    material.albedo = Color::rgb(r, 0.7, 0.6).into();
+    material.albedo = Color::rgb(r, 0.0, 1.0).into();
 }
 
 fn update_odd_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
     for mut block in query.iter_mut() {
-        if block.id % 2.0 != 0.0 {
+        if block.id % 2 != 0 {
             let mut rng = rand::thread_rng();
     
             builder::mutate_blocks_with_new_particles(&mut rng, &mut block);
@@ -124,7 +124,7 @@ fn update_even_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
     for mut block in query.iter_mut() {
-        if block.id % 2.0 == 0.0 {
+        if block.id % 2 == 0 {
             let mut rng = rand::thread_rng();
     
             builder::mutate_blocks_with_new_particles(&mut rng, &mut block);

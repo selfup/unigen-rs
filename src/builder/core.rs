@@ -24,6 +24,7 @@ impl Proton {
         }
     }
 }
+
 #[derive(Debug, Copy, Clone)]
 pub struct Protons {
     pub count: u32,
@@ -49,14 +50,13 @@ pub enum Neutron {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Block {
-    pub id: f32,
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+    pub id: u32,
+    pub x: u32,
+    pub y: u32,
+    pub z: u32,
     pub charge: i8,
     pub atom: Atom,
 }
-
 
 #[derive(Debug, Copy, Clone)]
 pub struct Quarks {
@@ -82,6 +82,7 @@ impl Quark {
         }
     }
 }
+
 #[derive(Debug, Copy, Clone)]
 pub enum StrongCharge {
     Red,
@@ -100,6 +101,7 @@ impl StrongCharge {
         }
     }
 }
+
 #[derive(Debug, Copy, Clone)]
 pub enum ElectricCharge {
     PositiveTwoThirds,
@@ -114,6 +116,7 @@ impl ElectricCharge {
         }
     }
 }
+
 #[derive(Debug, Copy, Clone)]
 pub struct Baryons {}
 
