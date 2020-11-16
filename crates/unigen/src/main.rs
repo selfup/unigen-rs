@@ -12,7 +12,5 @@ fn main() {
 
     let parsed_size = size.trim().parse::<u32>().unwrap();
 
-    for _ in 0..parsed_size {
-        let _ = builder::generate_universe(parsed_size);
-    }
+    let _ = builder::generate_universe(parsed_size);
 }
