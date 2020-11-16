@@ -1,11 +1,13 @@
 extern crate rand;
 
 use std::env;
+
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
 
+use rayon::prelude::*;
+
 mod builder;
-use builder::Blocks;
 
 #[allow(unused_imports)]
 use rand::Rng;
@@ -15,11 +17,10 @@ fn main() {
         .add_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
-        .add_system(update_odd_block_atoms.system())
-        .add_system(update_even_block_atoms.system())
-        .add_system(update_odd_block_spheres.system())
-        .add_system(update_even_block_spheres.system())
+        .add_system(update_block_atoms.system())
+        .add_system(update_block_spheres.system())
         .add_system(camera_movement.system())
+        .add_system(random_movement.system())
         .add_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .run();
 }
@@ -31,8 +32,16 @@ fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
+    let mut size = String::new();
+    let args: Vec<String> = env::args().collect();
 
-    let blocks = generate_universe();
+    if args.len() > 1 {
+        size = args[1].clone();
+    }
+
+    let parsed_size = size.trim().parse::<u32>().unwrap();
+
+    let blocks = builder::generate_universe(parsed_size);
 
     for block in blocks {
         let y = block.y as f32;
@@ -68,25 +77,12 @@ fn setup(
         .with(CameraMatcher());
 }
 
-fn update_even_block_spheres(
+fn update_block_spheres(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
     for (material_handle, block) in query.iter_mut() {
-        if block.id % 2 == 0 {
-            update_albedo(&mut materials, material_handle, block);
-        }
-    }
-}
-
-fn update_odd_block_spheres(
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
-) {
-    for (material_handle, block) in query.iter_mut() {
-        if block.id % 2 != 0 {
-            update_albedo(&mut materials, material_handle, block);
-        }
+        update_albedo(&mut materials, material_handle, block);
     }
 }
 
@@ -106,65 +102,22 @@ fn update_albedo(
     material.albedo = Color::rgb(r, 0.0, 1.0).into();
 }
 
-fn update_odd_block_atoms(
+fn update_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
-    for mut block in query.iter_mut() {
-        if block.id % 2 != 0 {
-            let mut rng = rand::thread_rng();
+    let mut query_vec = vec![];
+
+    for block in query.iter_mut() {
+        query_vec.push(block);
+    }
     
-            builder::mutate_blocks_with_new_particles(&mut rng, &mut block);
+    query_vec.par_chunks_mut(8).for_each_init(|| rand::thread_rng(), |rng, blocks| {
+        for block in blocks {
+            builder::mutate_blocks_with_new_particles(rng, block);
     
-            builder::calculate_charge(&mut block);
+            builder::calculate_charge(block);
         }
-    }
-}
-
-fn update_even_block_atoms(
-    mut query: Query<&mut builder::core::Block>,
-) {
-    for mut block in query.iter_mut() {
-        if block.id % 2 == 0 {
-            let mut rng = rand::thread_rng();
-    
-            builder::mutate_blocks_with_new_particles(&mut rng, &mut block);
-    
-            builder::calculate_charge(&mut block);
-        }
-    }
-}
-
-fn generate_universe() -> Vec<builder::core::Block> {
-    let mut size = String::new();
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() > 1 {
-        size = args[1].clone();
-    }
-
-    let parsed_size = size.trim().parse::<u32>().unwrap();
-
-    println!("Building Universe..");
-
-    let mut universe = vec![];
-    let mut neturon: [u32; 1] = [0];
-    let mut proton: [u32; 1] = [0];
-    let mut electron: [u32; 1] = [0];
-
-    let mut generated_universe = Blocks::initialize_universe(parsed_size, &mut universe);
-
-    generated_universe = Blocks::tick(parsed_size, &mut generated_universe);
-    Blocks::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
-
-    println!("Snapshot..\n\n{:?}\n", &generated_universe[0]);
-    println!("Universe built!\nChecking the charge..");
-
-    Blocks::charge_of_field(&mut proton, &mut electron, parsed_size as u32);
-    Blocks::atom_charge(&mut generated_universe);
-
-    println!("Size of Universe: {:?}", generated_universe.len());
-
-    generated_universe
+    });
 }
 
 fn camera_movement(
@@ -180,6 +133,16 @@ fn camera_movement(
  
             transform.translation += input_dir * time.delta_seconds * 10.0;
         }
+    }
+}
+
+fn random_movement(
+    mut query: Query<(&mut Transform, &mut builder::core::Block)>,
+) {
+    for (mut transform,  block) in query.iter_mut() {
+        let new_translation = Vec3::new(block.x as f32, block.y as f32, block.z as f32);
+
+        transform.translation = new_translation;
     }
 }
 
