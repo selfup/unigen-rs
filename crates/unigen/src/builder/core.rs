@@ -39,14 +39,18 @@ impl Protons {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Proton {
-    //Protons need up, up, down quarks
+    // Protons need up, up, down quarks
     pub quarks: (Quark, Quark, Quark),
 }
 
 impl Proton {
     pub fn new() -> Proton {
         Proton {
-            quarks: (Quark::new(0,0), Quark::new(1,1), Quark::new(2,1))
+            quarks: (
+                Quark::new(0,0),
+                Quark::new(1,1),
+                Quark::new(2,1),
+            )
         }
     }
 }
@@ -69,14 +73,18 @@ impl Neutrons {
 }
 #[derive(Debug, Copy, Clone)]
 pub struct Neutron {
-    //Neutrons need up, down, down quarks
+    // Neutrons need up, down, down quarks
     pub quarks: (Quark, Quark, Quark),
 }
 
 impl Neutron {
     pub fn new() -> Neutron {
         Neutron {
-            quarks: (Quark::new(0,1), Quark::new(1,0), Quark::new(2,0))
+            quarks: (
+                Quark::new(0,1),
+                Quark::new(1,0),
+                Quark::new(2,0),
+            )
         }
     }
 }

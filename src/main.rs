@@ -7,7 +7,7 @@ use bevy::render::pass::ClearColor;
 
 use rayon::prelude::*;
 
-mod builder;
+use unigen::builder;
 
 #[allow(unused_imports)]
 use rand::Rng;
