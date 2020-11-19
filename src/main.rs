@@ -104,8 +104,6 @@ fn update_albedo(
 fn update_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
-    println!("BLOCKS");
-
     let mut query_vec = vec![];
     
     for block in query.iter_mut() {
@@ -142,8 +140,6 @@ fn camera_movement(
 fn random_movement(
     mut query: Query<(&mut Transform, &mut builder::core::Block)>,
 ) {
-    println!("TRANSFORMS AND BLOCKS");
-
     let mut query_vec = vec![];
     
     for (transform, block) in query.iter_mut() {
