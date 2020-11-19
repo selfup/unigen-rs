@@ -158,35 +158,6 @@ fn it_can_begin() {
 }
 
 #[test]
-fn it_can_shred() {
-    use std::time::{SystemTime};
-
-    let size = std::env::var("SHRED_SIZE");
-    let parsed_size: u32;
-
-    match size {
-        Ok(val) => parsed_size = val.trim().parse::<u32>().unwrap(),
-        Err(_e) => parsed_size = 20,
-    }
-
-    let now = SystemTime::now();
-
-    let generated_universe = generate_universe(parsed_size);
-
-    match now.elapsed() {
-        Ok(elapsed) => {
-            println!("Time to generate/mutate/pass in ms: {}", elapsed.as_millis());
-        }
-        Err(e) => {
-            println!("Error: {:?}", e);
-        }
-    }
-
-    let universe_length = generated_universe.len() as u32;
-    assert_eq!(universe_length, (parsed_size * parsed_size * parsed_size));
-}
-
-#[test]
 fn it_can_infer_the_charge_of_an_atom() {
     let mut neturon: [u32; 1] = [0];
     let mut proton: [u32; 1] = [0];
