@@ -2564,6 +2564,7 @@ name = "oxidizy"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "num_cpus",
  "rand",
  "rayon",
  "unigen",

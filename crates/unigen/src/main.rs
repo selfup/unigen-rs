@@ -1,6 +1,6 @@
 use std::env::args;
 
-mod builder;
+use unigen;
 
 fn main() {
     let mut size = String::new();
@@ -12,5 +12,7 @@ fn main() {
 
     let parsed_size = size.trim().parse::<u32>().unwrap();
 
-    let _ = builder::generate_universe(parsed_size);
+    println!("{}", parsed_size);
+
+    let _ = unigen::builder::generate_universe(parsed_size);
 }

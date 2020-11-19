@@ -34,39 +34,35 @@ Amount of Atoms in Universe: 27000
 
 ![image](https://user-images.githubusercontent.com/9837366/99208853-dce09380-277e-11eb-88be-e07d2044b10c.png)
 
-### Testing
+### Sans UI
 
 Bevy/ECS code is not tested. Still in beta and too many refactorings will take place over the next year or so.
 
-However if you want to fill up a bunch of RAM and see how performant the `builder::generate_universe` is, you can run the test script which runs in release mode:
+However if you want to fill up a bunch of RAM and see how performant the `builder::generate_universe` is, you can run the generate script:
 
 _warning this used up 80% of my RAM and I have 32GB of RAM!_
 
-**`SHRED_SIZE=190` is cubed and then 118 default protons and neutrons are made per atom!**
+**`190` is cubed and then 118 default protons and neutrons are made per atom!**
 
 ```
-$ SHRED_SIZE=190 ./scripts/test.sh
-+ cargo test --release -- --nocapture
-   Compiling oxidizy v0.1.0 (C:\Users\boudi\Documents\Rust\oxidizy)
-    Finished release [optimized] target(s) in 1.65s
-     Running target\release\deps\oxidizy-0d20c3fcb5f5d1ba.exe
-
-running 4 tests
+$ ./scripts/generate.sh 190
++ cd crates/unigen
++ cargo build --release
+    Finished release [optimized] target(s) in 0.09s
++ cargo run --release 190
+    Finished release [optimized] target(s) in 0.09s
+     Running `C:\Users\boudi\Documents\Rust\oxidizy\target\release\unigen.exe 190`
+190
 Building Universe..
-Threads: 16
-Threads: 16
-Threads: 16
-test builder::it_can_sense_the_field ... ok
-test builder::it_can_begin ... ok
-test builder::it_can_infer_the_charge_of_an_atom ... ok
 Threads: 16
 Universe built!
 Checking the charge..
 Field is Cationic
 Amount of Atoms in Universe: 6859000
 Amount of protons and neutrons: 1618724000
-Time to generate/mutate/pass in ms: 4799
-test builder::it_can_shred ... ok
 
-test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+real    0m4.562s
+user    0m0.000s
+sys     0m0.015s
++ cd -
 ```

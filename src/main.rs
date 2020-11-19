@@ -1,7 +1,6 @@
 extern crate rand;
 
 use std::env;
-
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
 
@@ -105,13 +104,17 @@ fn update_albedo(
 fn update_block_atoms(
     mut query: Query<&mut builder::core::Block>,
 ) {
-    let mut query_vec = vec![];
+    println!("BLOCKS");
 
+    let mut query_vec = vec![];
+    
     for block in query.iter_mut() {
         query_vec.push(block);
     }
-    
-    query_vec.par_chunks_mut(8).for_each_init(|| rand::thread_rng(), |rng, blocks| {
+
+    let chunks: usize = query_vec.len() / 2 / 2 / 2;
+
+    query_vec.par_chunks_mut(chunks).for_each_init(|| rand::thread_rng(), |rng, blocks| {
         for block in blocks {
             builder::mutate_blocks_with_new_particles(rng, block);
     
@@ -139,11 +142,23 @@ fn camera_movement(
 fn random_movement(
     mut query: Query<(&mut Transform, &mut builder::core::Block)>,
 ) {
-    for (mut transform,  block) in query.iter_mut() {
-        let new_translation = Vec3::new(block.x as f32, block.y as f32, block.z as f32);
+    println!("TRANSFORMS AND BLOCKS");
 
-        transform.translation = new_translation;
+    let mut query_vec = vec![];
+    
+    for (transform, block) in query.iter_mut() {
+        query_vec.push((transform, block));
     }
+
+    let chunks: usize = query_vec.len() / 2 / 2 / 2;
+
+    query_vec.par_chunks_mut(chunks).for_each_init(|| (), |_, entities| {
+        for (transform,  block) in entities {
+            let new_translation = Vec3::new(block.x as f32, block.y as f32, block.z as f32);
+
+            transform.translation = new_translation;
+        }
+    });
 }
 
 fn get_input_dir(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {
