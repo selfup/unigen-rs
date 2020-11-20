@@ -147,13 +147,11 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     let total_atoms = generated_universe_length;
     let total_baryons = generated_universe_length * default_baryons;
     let total_quarks = generated_universe_length * default_baryons* quarks_per_baryon;
-    let total_structs = total_baryons + total_baryons + total_quarks;
 
     println!("{}", "--------------------------------".magenta().bold());
     println!("Atoms: {}", total_atoms);
     println!("Baryons: {}", total_baryons);
     println!("Quarks: {}", total_quarks);
-    println!("Structs: {}", total_structs);
     println!("{}", "--------------------------------".red().bold());
 
     generated_universe
