@@ -1,4 +1,5 @@
 use rand::Rng;
+use colored::*;
 use rayon::prelude::*;
 
 pub mod core;
@@ -10,9 +11,11 @@ impl Blocks {
         let mut id: u32 = 0;
         
         let vec_size = (parsed_size * parsed_size * parsed_size) as usize;
-
+        
         let mut universe = Vec::with_capacity(vec_size);
-    
+        
+        println!("Threads: {}\nBuilding..", rayon::current_num_threads());
+        
         for x in 0..parsed_size {
             for y in 0..parsed_size {
                 for z in 0..parsed_size {                
@@ -42,8 +45,6 @@ impl Blocks {
                 }
             }
         }
-    
-        println!("Threads: {}", rayon::current_num_threads());
     
         universe
     }
@@ -122,7 +123,7 @@ pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: 
 }
 
 pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
-    println!("Building Universe..");
+    println!("{}", "--------------------------------".red().bold());
 
     let mut neturon: [u32; 1] = [0];
     let mut proton: [u32; 1] = [0];
@@ -133,13 +134,27 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     generated_universe = Blocks::tick(parsed_size, &mut generated_universe);
     Blocks::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
 
-    println!("Universe built!\nChecking the charge..");
+    println!("{}", "--------------------------------".purple().bold());
+    println!("Universe built!");
+    println!("{}", "--------------------------------".yellow().bold());
 
     Blocks::charge_of_field(&mut proton, &mut electron, parsed_size as u32);
     Blocks::atom_charge(&mut generated_universe);
 
-    println!("Amount of Atoms in Universe: {:?}", generated_universe.len());
-    println!("Amount of protons and neutrons: {}", generated_universe.len() * 118 * 2);
+    let default_baryons = 236;
+    let quarks_per_baryon = 3;
+    let generated_universe_length = generated_universe.len();
+    let total_atoms = generated_universe_length;
+    let total_baryons = generated_universe_length * default_baryons;
+    let total_quarks = generated_universe_length * default_baryons* quarks_per_baryon;
+    let total_structs = total_baryons + total_baryons + total_quarks;
+
+    println!("{}", "--------------------------------".magenta().bold());
+    println!("Atoms: {}", total_atoms);
+    println!("Baryons: {}", total_baryons);
+    println!("Quarks: {}", total_quarks);
+    println!("Structs: {}", total_structs);
+    println!("{}", "--------------------------------".red().bold());
 
     generated_universe
 }
