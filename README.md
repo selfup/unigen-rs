@@ -24,12 +24,18 @@ Example Use:
 $ ./scripts/rel.run.sh 30
 + cargo build -q --release
 + cargo run -q --release 30
-Building Universe..
+--------------------------------
 Threads: 16
+Building..
+--------------------------------
 Universe built!
-Checking the charge..
+--------------------------------
 Field is Anionic
-Amount of Atoms in Universe: 27000
+--------------------------------
+Atoms: 27000
+Baryons: 6372000
+Quarks: 19116000
+--------------------------------
 ```
 
 ![image](https://user-images.githubusercontent.com/9837366/99208853-dce09380-277e-11eb-88be-e07d2044b10c.png)
@@ -42,27 +48,24 @@ However if you want to fill up a bunch of RAM and see how performant the `builde
 
 _warning this used up 80% of my RAM and I have 32GB of RAM!_
 
-**`190` is cubed and then 118 default protons and neutrons are made per atom!**
+**`200` is cubed and then 118 default protons and neutrons are made per atom!**
 
 ```
-$ ./scripts/generate.sh 190
-+ cd crates/unigen
-+ cargo build --release
-    Finished release [optimized] target(s) in 0.09s
-+ cargo run --release 190
-    Finished release [optimized] target(s) in 0.09s
-     Running `C:\Users\boudi\Documents\Rust\oxidizy\target\release\unigen.exe 190`
-190
-Building Universe..
+$ ./scripts/generate.sh 200
+--------------------------------
 Threads: 16
+Building..
+--------------------------------
 Universe built!
-Checking the charge..
+--------------------------------
 Field is Cationic
-Amount of Atoms in Universe: 6859000
-Amount of protons and neutrons: 1618724000
+--------------------------------
+Atoms: 8000000
+Baryons: 1888000000
+Quarks: 5664000000
+--------------------------------
 
-real    0m4.562s
+real    0m5.456s
 user    0m0.000s
-sys     0m0.015s
-+ cd -
+sys     0m0.000s
 ```
