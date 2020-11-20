@@ -30,8 +30,10 @@ impl Blocks {
                         atom: core::Atom {
                            electrons,
                             nucleus: core::Nucleus {
-                                protons: generated_protons,
-                                neutrons: generated_neutrons,
+                                baryon: core::Baryon {
+                                    protons: generated_protons,
+                                    neutrons: generated_neutrons,
+                                },
                             },
                         },
                     });
@@ -47,8 +49,8 @@ impl Blocks {
     }
     
     pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
-        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons.count).sum();
-        proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons.count).sum();
+        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.neutrons.count).sum();
+        proton[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.protons.count).sum();
         electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
     }
     
@@ -87,9 +89,9 @@ impl Blocks {
 }
 
 pub fn calculate_charge(block: &mut core::Block) {
-    if block.atom.nucleus.protons.count == block.atom.electrons {
+    if block.atom.nucleus.baryon.protons.count == block.atom.electrons {
         block.charge = 0;
-    } else if block.atom.nucleus.protons.count > block.atom.electrons {
+    } else if block.atom.nucleus.baryon.protons.count > block.atom.electrons {
         block.charge = 1;
     } else {
         block.charge = -1;
@@ -115,8 +117,8 @@ pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: 
     }
 
     block.atom.electrons = electrons;
-    block.atom.nucleus.protons = core::Protons::new(protons);
-    block.atom.nucleus.neutrons = core::Neutrons::new(neutrons);
+    block.atom.nucleus.baryon.protons = core::Protons::new(protons);
+    block.atom.nucleus.baryon.neutrons = core::Neutrons::new(neutrons);
 }
 
 pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {

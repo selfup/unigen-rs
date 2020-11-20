@@ -6,6 +6,11 @@ pub struct Atom {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Nucleus {
+    pub baryon: Baryon,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Baryon {
     pub protons: Protons,
     pub neutrons: Neutrons,
 }
@@ -150,9 +155,6 @@ impl ElectricCharge {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub struct Baryons {}
-
-#[derive(Debug, Copy, Clone)]
 pub struct Fermion {
     pub quarks: Quarks,
     pub leptons: Leptons,
@@ -170,3 +172,9 @@ pub struct Leptons {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Lepton {}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Bozons {}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Hadrons {}

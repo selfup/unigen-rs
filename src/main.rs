@@ -132,7 +132,7 @@ fn camera_movement(
         for (mut transform,  _camera) in query.iter_mut() {
             let input_dir = (transform.rotation * input_dir).normalize();
  
-            transform.translation += input_dir * time.delta_seconds * 10.0;
+            transform.translation += input_dir * time.delta_seconds * 50.0;
         }
     }
 }
