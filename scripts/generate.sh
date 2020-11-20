@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-set -euox pipefail
+set -euo pipefail
 
 cd crates/unigen
 
-cargo build --release
+cargo build -q --release
 
-time cargo run --release $1
+time cargo run -q --release $1
 
-cd -
+cd ../../
