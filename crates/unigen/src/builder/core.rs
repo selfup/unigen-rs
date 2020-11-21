@@ -25,15 +25,25 @@ pub struct Block {
     pub atom: Atom,
 }
 
+
+
 #[derive(Debug, Copy, Clone)]
 pub struct Protons {
     pub count: u32,
-    pub protons: [Proton; 118],
+    pub protons: [ProtonData; 118],
 }
 
 impl Protons {
     pub fn new(count: u32) -> Protons {
-        let protons = [Proton::new(); 118];
+        let mut protons = [ProtonData::Unknown; 118];
+
+        for idx in 0..count as usize {
+            let proton = Proton::new();
+
+            let proton_data = ProtonData::new(proton);
+
+            protons[idx] = proton_data;
+        }
         
         Protons {
             count, 
@@ -49,8 +59,8 @@ pub struct Proton {
 }
 
 impl Proton {
-    pub fn new() -> Proton {
-        Proton {
+    pub fn new() -> Self {
+         Self {
             quarks: (
                 Quark::new(0, 0),
                 Quark::new(1, 1),
@@ -63,12 +73,12 @@ impl Proton {
 #[derive(Debug, Copy, Clone)]
 pub struct Neutrons {
     pub count: u32,
-    pub neutrons: [Neutron; 118],
+    pub neutrons: [NeutronData; 118],
 }
 
 impl Neutrons {
     pub fn new(count: u32) -> Neutrons {
-        let neutrons = [Neutron::new(); 118];
+        let neutrons = [NeutronData::Unknown; 118];
         
         Neutrons {
             count, 
@@ -96,6 +106,59 @@ impl Neutron {
 }
 
 #[derive(Debug, Copy, Clone)]
+pub enum QuarkData {
+    Unknown,
+    RedUpQuark,
+    RedDownQuark,
+    BlueUpQuark,
+    BlueDownQuark,
+    GreenUpQuark,
+    GreenDownQuark,
+    AlphaUpQuark,
+    AlphaDownQuark,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum ProtonData {
+    Unknown,
+    RedUpUpDownQuark,
+    BlueUpUpDownQuark,
+    GreenUpUpDownQuark,
+    AlphaUpUpDownQuark,
+}
+
+impl ProtonData {
+    pub fn new(proton: Proton) -> Self {
+        let first_quark = Quark::data(proton.quarks.0);
+        let second_quark = Quark::data(proton.quarks.1);
+        let third_quark = Quark::data(proton.quarks.2);
+
+        match (first_quark, second_quark, third_quark) {
+            (QuarkData::RedUpQuark, QuarkData::RedUpQuark, QuarkData::RedDownQuark) => ProtonData::RedUpUpDownQuark,
+            
+            (QuarkData::BlueUpQuark, QuarkData::BlueUpQuark, QuarkData::BlueDownQuark) => ProtonData::BlueUpUpDownQuark,
+            
+            (QuarkData::GreenUpQuark, QuarkData::GreenUpQuark, QuarkData::GreenDownQuark) => ProtonData::RedUpUpDownQuark,
+            
+            (QuarkData::AlphaUpQuark, QuarkData::AlphaUpQuark, QuarkData::AlphaDownQuark) => ProtonData::RedUpUpDownQuark,
+            
+            (QuarkData::Unknown, QuarkData::Unknown, QuarkData::Unknown) => ProtonData::Unknown,
+
+            _ => ProtonData::Unknown,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum NeutronData {
+    Unknown,
+    RedUpDownDownQuark,
+    BlueUpDownDownQuark,
+    GreenUpDownDownQuark,
+    AlphaUpDownDownQuark,
+}
+
+#[derive(Debug, Copy, Clone)]
 pub struct Quarks {
     pub u: Quark,
     pub d: Quark,
@@ -116,6 +179,25 @@ impl Quark {
         Quark{
             color: StrongCharge::new(color_charge),
             elementary_charge: ElectricCharge::new(electric_charge),
+        }
+    }
+
+    pub fn data(quark: Quark) -> QuarkData {
+        #[allow(unreachable_patterns)]
+        match (quark.color, quark.elementary_charge) {
+            (StrongCharge::Red, ElectricCharge::NegativeOneThird) => QuarkData::RedDownQuark, 
+            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) => QuarkData::RedUpQuark,
+
+            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) => QuarkData::BlueDownQuark, 
+            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) => QuarkData::BlueUpQuark, 
+            
+            (StrongCharge::Green, ElectricCharge::NegativeOneThird) => QuarkData::GreenDownQuark, 
+            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) => QuarkData::GreenUpQuark, 
+            
+            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) => QuarkData::AlphaDownQuark, 
+            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) => QuarkData::AlphaUpQuark,
+            
+            _ => QuarkData::Unknown,
         }
     }
 }
@@ -178,3 +260,15 @@ pub struct Bozons {}
 
 #[derive(Debug, Copy, Clone)]
 pub struct Hadrons {}
+
+#[derive(Debug, Copy, Clone)]
+pub enum Flip {
+    Zero,
+    One,
+    NegativeOne,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct MinkowskiSpace {
+    pub flips: [Flip; 16],
+}
