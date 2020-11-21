@@ -127,18 +127,22 @@ pub enum ProtonData {
 
 impl ProtonData {
     pub fn new(proton: Proton) -> Self {
-        let first_quark = Quark::data(proton.quarks.0);
-        let second_quark = Quark::data(proton.quarks.1);
-        let third_quark = Quark::data(proton.quarks.2);
+        let first_quark: QuarkData = Quark::data(proton.quarks.0);
+        let second_quark: QuarkData = Quark::data(proton.quarks.1);
+        let third_quark: QuarkData = Quark::data(proton.quarks.2);
 
         match (first_quark, second_quark, third_quark) {
-            (QuarkData::RedUpQuark, QuarkData::RedUpQuark, QuarkData::RedDownQuark) => ProtonData::RedUpUpDownQuark,
+            (QuarkData::RedUpQuark, QuarkData::RedUpQuark, QuarkData::RedDownQuark) =>
+                ProtonData::RedUpUpDownQuark,
             
-            (QuarkData::BlueUpQuark, QuarkData::BlueUpQuark, QuarkData::BlueDownQuark) => ProtonData::BlueUpUpDownQuark,
+            (QuarkData::BlueUpQuark, QuarkData::BlueUpQuark, QuarkData::BlueDownQuark) =>
+                ProtonData::BlueUpUpDownQuark,
             
-            (QuarkData::GreenUpQuark, QuarkData::GreenUpQuark, QuarkData::GreenDownQuark) => ProtonData::RedUpUpDownQuark,
+            (QuarkData::GreenUpQuark, QuarkData::GreenUpQuark, QuarkData::GreenDownQuark) =>
+                ProtonData::RedUpUpDownQuark,
             
-            (QuarkData::AlphaUpQuark, QuarkData::AlphaUpQuark, QuarkData::AlphaDownQuark) => ProtonData::RedUpUpDownQuark,
+            (QuarkData::AlphaUpQuark, QuarkData::AlphaUpQuark, QuarkData::AlphaDownQuark) =>
+                ProtonData::RedUpUpDownQuark,
             
             _ => ProtonData::Unknown,
         }
@@ -181,7 +185,7 @@ impl Quark {
     pub fn data(quark: Quark) -> QuarkData {
         #[allow(unreachable_patterns)]
         match (quark.color, quark.elementary_charge) {
-            (StrongCharge::Red, ElectricCharge::NegativeOneThird) => QuarkData::RedDownQuark, 
+            (StrongCharge::Red, ElectricCharge::NegativeOneThird) => QuarkData::RedDownQuark,
             (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) => QuarkData::RedUpQuark,
 
             (StrongCharge::Blue, ElectricCharge::NegativeOneThird) => QuarkData::BlueDownQuark, 
