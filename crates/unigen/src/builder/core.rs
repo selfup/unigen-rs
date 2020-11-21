@@ -25,8 +25,6 @@ pub struct Block {
     pub atom: Atom,
 }
 
-
-
 #[derive(Debug, Copy, Clone)]
 pub struct Protons {
     pub count: u32,
@@ -142,8 +140,6 @@ impl ProtonData {
             
             (QuarkData::AlphaUpQuark, QuarkData::AlphaUpQuark, QuarkData::AlphaDownQuark) => ProtonData::RedUpUpDownQuark,
             
-            (QuarkData::Unknown, QuarkData::Unknown, QuarkData::Unknown) => ProtonData::Unknown,
-
             _ => ProtonData::Unknown,
         }
     }
