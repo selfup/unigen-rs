@@ -263,6 +263,7 @@ pub struct Hadrons {}
 
 #[derive(Debug, Copy, Clone)]
 pub enum Flip {
+    Unknown,
     Zero,
     One,
     NegativeOne,
