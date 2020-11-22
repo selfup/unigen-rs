@@ -76,7 +76,15 @@ pub struct Neutrons {
 
 impl Neutrons {
     pub fn new(count: u32) -> Neutrons {
-        let neutrons = [NeutronData::Unknown; 118];
+        let mut neutrons = [NeutronData::Unknown; 118];
+
+        for idx in 0..count as usize {
+            let neutron = Neutron::new();
+
+            let neutron_data = NeutronData::new(neutron);
+
+            neutrons[idx] = neutron_data;
+        }
         
         Neutrons {
             count, 
@@ -156,6 +164,30 @@ pub enum NeutronData {
     BlueUpDownDownQuark,
     GreenUpDownDownQuark,
     AlphaUpDownDownQuark,
+}
+
+impl NeutronData {
+    pub fn new(neutron: Neutron) -> Self {
+        let first_quark: QuarkData = Quark::data(neutron.quarks.0);
+        let second_quark: QuarkData = Quark::data(neutron.quarks.1);
+        let third_quark: QuarkData = Quark::data(neutron.quarks.2);
+
+        match (first_quark, second_quark, third_quark) {
+            (QuarkData::RedUpQuark, QuarkData::RedDownQuark, QuarkData::RedDownQuark) =>
+                NeutronData::RedUpDownDownQuark,
+            
+            (QuarkData::BlueUpQuark, QuarkData::BlueDownQuark, QuarkData::BlueDownQuark) =>
+                NeutronData::BlueUpDownDownQuark,
+            
+            (QuarkData::GreenUpQuark, QuarkData::GreenDownQuark, QuarkData::GreenDownQuark) =>
+                NeutronData::RedUpDownDownQuark,
+            
+            (QuarkData::AlphaUpQuark, QuarkData::AlphaDownQuark, QuarkData::AlphaDownQuark) =>
+                NeutronData::RedUpDownDownQuark,
+            
+            _ => NeutronData::Unknown,
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone)]
