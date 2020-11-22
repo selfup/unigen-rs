@@ -1,4 +1,5 @@
 use rand::Rng;
+use colored::*;
 use rayon::prelude::*;
 
 pub mod core;
@@ -10,9 +11,11 @@ impl Blocks {
         let mut id: u32 = 0;
         
         let vec_size = (parsed_size * parsed_size * parsed_size) as usize;
-
+        
         let mut universe = Vec::with_capacity(vec_size);
-    
+        
+        println!("Threads: {}\nBuilding..", rayon::current_num_threads());
+        
         for x in 0..parsed_size {
             for y in 0..parsed_size {
                 for z in 0..parsed_size {                
@@ -30,8 +33,10 @@ impl Blocks {
                         atom: core::Atom {
                            electrons,
                             nucleus: core::Nucleus {
-                                protons: generated_protons,
-                                neutrons: generated_neutrons,
+                                baryon: core::Baryon {
+                                    protons: generated_protons,
+                                    neutrons: generated_neutrons,
+                                },
                             },
                         },
                     });
@@ -41,14 +46,12 @@ impl Blocks {
             }
         }
     
-        println!("Threads: {}", rayon::current_num_threads());
-    
         universe
     }
     
     pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
-        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.neutrons.count).sum();
-        proton[0] = universe.par_iter().map(|i| i.atom.nucleus.protons.count).sum();
+        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.neutrons.count).sum();
+        proton[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.protons.count).sum();
         electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
     }
     
@@ -87,9 +90,9 @@ impl Blocks {
 }
 
 pub fn calculate_charge(block: &mut core::Block) {
-    if block.atom.nucleus.protons.count == block.atom.electrons {
+    if block.atom.nucleus.baryon.protons.count == block.atom.electrons {
         block.charge = 0;
-    } else if block.atom.nucleus.protons.count > block.atom.electrons {
+    } else if block.atom.nucleus.baryon.protons.count > block.atom.electrons {
         block.charge = 1;
     } else {
         block.charge = -1;
@@ -115,12 +118,12 @@ pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: 
     }
 
     block.atom.electrons = electrons;
-    block.atom.nucleus.protons = core::Protons::new(protons);
-    block.atom.nucleus.neutrons = core::Neutrons::new(neutrons);
+    block.atom.nucleus.baryon.protons = core::Protons::new(protons);
+    block.atom.nucleus.baryon.neutrons = core::Neutrons::new(neutrons);
 }
 
 pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
-    println!("Building Universe..");
+    println!("{}", "--------------------------------".red().bold());
 
     let mut neturon: [u32; 1] = [0];
     let mut proton: [u32; 1] = [0];
@@ -131,13 +134,25 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     generated_universe = Blocks::tick(parsed_size, &mut generated_universe);
     Blocks::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
 
-    println!("Universe built!\nChecking the charge..");
+    println!("{}", "--------------------------------".purple().bold());
+    println!("Universe built!");
+    println!("{}", "--------------------------------".yellow().bold());
 
     Blocks::charge_of_field(&mut proton, &mut electron, parsed_size as u32);
     Blocks::atom_charge(&mut generated_universe);
 
-    println!("Amount of Atoms in Universe: {:?}", generated_universe.len());
-    println!("Amount of protons and neutrons: {}", generated_universe.len() * 118 * 2);
+    let default_baryons = 236;
+    let quarks_per_baryon = 3;
+    let generated_universe_length = generated_universe.len();
+    let total_atoms = generated_universe_length;
+    let total_baryons = generated_universe_length * default_baryons;
+    let total_quarks = generated_universe_length * default_baryons* quarks_per_baryon;
+
+    println!("{}", "--------------------------------".magenta().bold());
+    println!("Atoms: {}", total_atoms);
+    println!("Baryons: {}", total_baryons);
+    println!("Quarks: {}", total_quarks);
+    println!("{}", "--------------------------------".red().bold());
 
     generated_universe
 }

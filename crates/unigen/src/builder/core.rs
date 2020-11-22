@@ -6,6 +6,11 @@ pub struct Atom {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Nucleus {
+    pub baryon: Baryon,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Baryon {
     pub protons: Protons,
     pub neutrons: Neutrons,
 }
@@ -23,12 +28,20 @@ pub struct Block {
 #[derive(Debug, Copy, Clone)]
 pub struct Protons {
     pub count: u32,
-    pub protons: [Proton; 118],
+    pub protons: [ProtonData; 118],
 }
 
 impl Protons {
     pub fn new(count: u32) -> Protons {
-        let protons = [Proton::new(); 118];
+        let mut protons = [ProtonData::Unknown; 118];
+
+        for idx in 0..count as usize {
+            let proton = Proton::new();
+
+            let proton_data = ProtonData::new(proton);
+
+            protons[idx] = proton_data;
+        }
         
         Protons {
             count, 
@@ -44,8 +57,8 @@ pub struct Proton {
 }
 
 impl Proton {
-    pub fn new() -> Proton {
-        Proton {
+    pub fn new() -> Self {
+         Self {
             quarks: (
                 Quark::new(0, 0),
                 Quark::new(1, 1),
@@ -58,12 +71,20 @@ impl Proton {
 #[derive(Debug, Copy, Clone)]
 pub struct Neutrons {
     pub count: u32,
-    pub neutrons: [Neutron; 118],
+    pub neutrons: [NeutronData; 118],
 }
 
 impl Neutrons {
     pub fn new(count: u32) -> Neutrons {
-        let neutrons = [Neutron::new(); 118];
+        let mut neutrons = [NeutronData::Unknown; 118];
+
+        for idx in 0..count as usize {
+            let neutron = Neutron::new();
+
+            let neutron_data = NeutronData::new(neutron);
+
+            neutrons[idx] = neutron_data;
+        }
         
         Neutrons {
             count, 
@@ -91,6 +112,85 @@ impl Neutron {
 }
 
 #[derive(Debug, Copy, Clone)]
+pub enum QuarkData {
+    Unknown,
+    RedUpQuark,
+    RedDownQuark,
+    BlueUpQuark,
+    BlueDownQuark,
+    GreenUpQuark,
+    GreenDownQuark,
+    AlphaUpQuark,
+    AlphaDownQuark,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum ProtonData {
+    Unknown,
+    RedUpUpDownQuark,
+    BlueUpUpDownQuark,
+    GreenUpUpDownQuark,
+    AlphaUpUpDownQuark,
+}
+
+impl ProtonData {
+    pub fn new(proton: Proton) -> Self {
+        let first_quark: QuarkData = Quark::data(proton.quarks.0);
+        let second_quark: QuarkData = Quark::data(proton.quarks.1);
+        let third_quark: QuarkData = Quark::data(proton.quarks.2);
+
+        match (first_quark, second_quark, third_quark) {
+            (QuarkData::RedUpQuark, QuarkData::RedUpQuark, QuarkData::RedDownQuark) =>
+                ProtonData::RedUpUpDownQuark,
+            
+            (QuarkData::BlueUpQuark, QuarkData::BlueUpQuark, QuarkData::BlueDownQuark) =>
+                ProtonData::BlueUpUpDownQuark,
+            
+            (QuarkData::GreenUpQuark, QuarkData::GreenUpQuark, QuarkData::GreenDownQuark) =>
+                ProtonData::RedUpUpDownQuark,
+            
+            (QuarkData::AlphaUpQuark, QuarkData::AlphaUpQuark, QuarkData::AlphaDownQuark) =>
+                ProtonData::AlphaUpUpDownQuark,
+            
+            _ => ProtonData::Unknown,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub enum NeutronData {
+    Unknown,
+    RedUpDownDownQuark,
+    BlueUpDownDownQuark,
+    GreenUpDownDownQuark,
+    AlphaUpDownDownQuark,
+}
+
+impl NeutronData {
+    pub fn new(neutron: Neutron) -> Self {
+        let first_quark: QuarkData = Quark::data(neutron.quarks.0);
+        let second_quark: QuarkData = Quark::data(neutron.quarks.1);
+        let third_quark: QuarkData = Quark::data(neutron.quarks.2);
+
+        match (first_quark, second_quark, third_quark) {
+            (QuarkData::RedUpQuark, QuarkData::RedDownQuark, QuarkData::RedDownQuark) =>
+                NeutronData::RedUpDownDownQuark,
+            
+            (QuarkData::BlueUpQuark, QuarkData::BlueDownQuark, QuarkData::BlueDownQuark) =>
+                NeutronData::BlueUpDownDownQuark,
+            
+            (QuarkData::GreenUpQuark, QuarkData::GreenDownQuark, QuarkData::GreenDownQuark) =>
+                NeutronData::RedUpDownDownQuark,
+            
+            (QuarkData::AlphaUpQuark, QuarkData::AlphaDownQuark, QuarkData::AlphaDownQuark) =>
+                NeutronData::AlphaUpDownDownQuark,
+            
+            _ => NeutronData::Unknown,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
 pub struct Quarks {
     pub u: Quark,
     pub d: Quark,
@@ -111,6 +211,25 @@ impl Quark {
         Quark{
             color: StrongCharge::new(color_charge),
             elementary_charge: ElectricCharge::new(electric_charge),
+        }
+    }
+
+    pub fn data(quark: Quark) -> QuarkData {
+        #[allow(unreachable_patterns)]
+        match (quark.color, quark.elementary_charge) {
+            (StrongCharge::Red, ElectricCharge::NegativeOneThird) => QuarkData::RedDownQuark,
+            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) => QuarkData::RedUpQuark,
+
+            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) => QuarkData::BlueDownQuark, 
+            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) => QuarkData::BlueUpQuark, 
+            
+            (StrongCharge::Green, ElectricCharge::NegativeOneThird) => QuarkData::GreenDownQuark, 
+            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) => QuarkData::GreenUpQuark, 
+            
+            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) => QuarkData::AlphaDownQuark, 
+            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) => QuarkData::AlphaUpQuark,
+            
+            _ => QuarkData::Unknown,
         }
     }
 }
@@ -150,9 +269,6 @@ impl ElectricCharge {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub struct Baryons {}
-
-#[derive(Debug, Copy, Clone)]
 pub struct Fermion {
     pub quarks: Quarks,
     pub leptons: Leptons,
@@ -170,3 +286,22 @@ pub struct Leptons {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Lepton {}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Bozons {}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Hadrons {}
+
+#[derive(Debug, Copy, Clone)]
+pub enum Flip {
+    Unknown,
+    Zero,
+    One,
+    NegativeOne,
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct MinkowskiSpace {
+    pub flips: [Flip; 16],
+}

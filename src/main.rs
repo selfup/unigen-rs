@@ -132,7 +132,7 @@ fn camera_movement(
         for (mut transform,  _camera) in query.iter_mut() {
             let input_dir = (transform.rotation * input_dir).normalize();
  
-            transform.translation += input_dir * time.delta_seconds * 10.0;
+            transform.translation += input_dir * time.delta_seconds * 50.0;
         }
     }
 }
@@ -148,7 +148,7 @@ fn random_movement(
 
     let chunks: usize = query_vec.len() / 2 / 2 / 2;
 
-    query_vec.par_chunks_mut(chunks).for_each_init(|| (), |_, entities| {
+    query_vec.par_chunks_mut(chunks).for_each(|entities| {
         for (transform,  block) in entities {
             let new_translation = Vec3::new(block.x as f32, block.y as f32, block.z as f32);
 

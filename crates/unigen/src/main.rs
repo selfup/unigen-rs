@@ -12,7 +12,5 @@ fn main() {
 
     let parsed_size = size.trim().parse::<u32>().unwrap();
 
-    println!("{}", parsed_size);
-
     let _ = unigen::builder::generate_universe(parsed_size);
 }
