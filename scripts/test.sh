@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
-set -euox pipefail
+set -euo pipefail
+
+# simulator
+cargo test --release -- --nocapture
+
+# unigen
+cd crates/unigen
 
 cargo test --release -- --nocapture
+
+cd ../..
