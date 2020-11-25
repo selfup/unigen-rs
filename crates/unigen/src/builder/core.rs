@@ -7,6 +7,16 @@ use proton::{Protons};
 use neutron::{Neutrons};
 
 #[derive(Debug, Copy, Clone)]
+pub struct Block {
+    pub id: u32,
+    pub x: u32,
+    pub y: u32,
+    pub z: u32,
+    pub charge: i8,
+    pub atom: Atom,
+}
+
+#[derive(Debug, Copy, Clone)]
 pub struct Atom {
     pub electrons: u32,
     pub nucleus: Nucleus,
@@ -21,16 +31,6 @@ pub struct Nucleus {
 pub struct Baryon {
     pub protons: Protons,
     pub neutrons: Neutrons,
-}
-
-#[derive(Debug, Copy, Clone)]
-pub struct Block {
-    pub id: u32,
-    pub x: u32,
-    pub y: u32,
-    pub z: u32,
-    pub charge: i8,
-    pub atom: Atom,
 }
 
 #[derive(Debug, Copy, Clone)]
