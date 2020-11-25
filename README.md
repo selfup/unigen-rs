@@ -58,14 +58,14 @@ Building..
 --------------------------------
 Universe built!
 --------------------------------
-Field is Anionic
+Field is Cationic
 --------------------------------
 Atoms: 46656000
 Baryons: 11010816000
 Quarks: 33032448000
 --------------------------------
 
-real    0m5.500s
+real    0m5.441s
 user    0m0.000s
-sys     0m0.015s
+sys     0m0.000s
 ```
