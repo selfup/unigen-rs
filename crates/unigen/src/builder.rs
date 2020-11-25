@@ -4,6 +4,8 @@ use rayon::prelude::*;
 
 pub mod core;
 
+use self::core::{proton, neutron};
+
 pub struct Blocks {}
 
 impl Blocks {
@@ -21,8 +23,8 @@ impl Blocks {
                 for z in 0..parsed_size {                
                     let (electrons, protons, neutrons): (u32, u32, u32) = (0, 0, 0);
 
-                    let generated_protons = core::Protons::new(protons);
-                    let generated_neutrons = core::Neutrons::new(neutrons);
+                    let generated_protons = proton::Protons::new(protons);
+                    let generated_neutrons = neutron::Neutrons::new(neutrons);
     
                     universe.push(core::Block {
                         id,
@@ -118,8 +120,8 @@ pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: 
     }
 
     block.atom.electrons = electrons;
-    block.atom.nucleus.baryon.protons = core::Protons::new(protons);
-    block.atom.nucleus.baryon.neutrons = core::Neutrons::new(neutrons);
+    block.atom.nucleus.baryon.protons = proton::Protons::new(protons);
+    block.atom.nucleus.baryon.neutrons = neutron::Neutrons::new(neutrons);
 }
 
 pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
