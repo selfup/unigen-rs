@@ -25,17 +25,25 @@ impl Quark {
     pub fn data(quark: Quark) -> QuarkData {
         #[allow(unreachable_patterns)]
         match (quark.color, quark.electric_charge) {
-            (StrongCharge::Red, ElectricCharge::NegativeOneThird) => QuarkData::RedDownQuark,
-            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) => QuarkData::RedUpQuark,
+            (StrongCharge::Red, ElectricCharge::NegativeOneThird) =>
+                QuarkData::RedDownQuark,
+            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) =>
+                QuarkData::RedUpQuark,
 
-            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) => QuarkData::BlueDownQuark, 
-            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) => QuarkData::BlueUpQuark, 
+            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) =>
+                QuarkData::BlueDownQuark, 
+            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) =>
+                QuarkData::BlueUpQuark, 
             
-            (StrongCharge::Green, ElectricCharge::NegativeOneThird) => QuarkData::GreenDownQuark, 
-            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) => QuarkData::GreenUpQuark, 
+            (StrongCharge::Green, ElectricCharge::NegativeOneThird) =>
+                QuarkData::GreenDownQuark, 
+            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) =>
+                QuarkData::GreenUpQuark, 
             
-            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) => QuarkData::AlphaDownQuark, 
-            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) => QuarkData::AlphaUpQuark,
+            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) =>
+                QuarkData::AlphaDownQuark, 
+            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) =>
+                QuarkData::AlphaUpQuark,
             
             _ => QuarkData::Unknown,
         }
