@@ -27,7 +27,6 @@ impl Neutrons {
 
 #[derive(Debug, Copy, Clone)]
 pub struct Neutron {
-    // Neutrons need up, down, down quarks
     pub quarks: (Quark, Quark, Quark),
 }
 
