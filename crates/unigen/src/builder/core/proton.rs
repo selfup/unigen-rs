@@ -166,9 +166,18 @@ impl ProtonData {
 
 #[test]
 fn it_defaults_all_protons_as_unknown() {
-    let protons = Protons::new(42);
+    let protons = Protons::new(0);
 
     for proton in protons.protons.iter() {
         assert_eq!(proton, &ProtonData::Unknown);
     }
+}
+
+#[test]
+fn it_can_match_a_single_proton_correctly() {
+    let protons = Protons::new(1);
+
+    let first_proton = protons.protons[0];
+
+    assert_eq!(first_proton, ProtonData::RedBlueGreenUpUpDownQuark);
 }
