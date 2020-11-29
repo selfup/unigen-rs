@@ -72,7 +72,7 @@ pub enum NeutronData {
     AlphaRedBlueUpDownDownQuark,
     AlphaRedGreenUpDownDownQuark,
     AlphaGreenRedUpDownDownQuark,
-    AlphaGeenBlueUpDownDownQuark,
+    AlphaGreenBlueUpDownDownQuark,
 }
 
 impl NeutronData {
@@ -90,73 +90,73 @@ impl NeutronData {
                 NeutronData::RedBlueAlphaUpDownDownQuark,
 
             (QuarkData::RedUpQuark, QuarkData::GreenDownQuark, QuarkData::BlueDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::RedGreenBlueUpDownDownQuark,
 
             (QuarkData::RedUpQuark, QuarkData::GreenDownQuark, QuarkData::AlphaDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::RedGreenAlphaUpDownDownQuark,
 
             (QuarkData::RedUpQuark, QuarkData::AlphaDownQuark, QuarkData::BlueDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::RedAlphaGreenUpDownDownQuark,
 
             (QuarkData::RedUpQuark, QuarkData::AlphaDownQuark, QuarkData::GreenDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::RedAlphaGreenUpDownDownQuark,
 
             // GreenUpQuark
             (QuarkData::GreenUpQuark, QuarkData::BlueDownQuark, QuarkData::RedDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::GreenBlueRedUpDownDownQuark,
 
             (QuarkData::GreenUpQuark, QuarkData::BlueDownQuark, QuarkData::AlphaDownQuark) =>
-                NeutronData::RedBlueAlphaUpDownDownQuark,
+                NeutronData::GreenBlueAlphaUpDownDownQuark,
 
             (QuarkData::GreenUpQuark, QuarkData::RedDownQuark, QuarkData::BlueDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::GreenRedBlueUpDownDownQuark,
 
             (QuarkData::GreenUpQuark, QuarkData::RedDownQuark, QuarkData::AlphaDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::GreenRedAlphaUpDownDownQuark,
 
             (QuarkData::GreenUpQuark, QuarkData::AlphaDownQuark, QuarkData::BlueDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::GreenAlphaBlueUpDownDownQuark,
 
             (QuarkData::GreenUpQuark, QuarkData::AlphaDownQuark, QuarkData::RedDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::GreenAlphaRedUpDownDownQuark,
 
             // BlueUpQuark
             (QuarkData::BlueUpQuark, QuarkData::GreenDownQuark, QuarkData::RedDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::BlueGreenRedUpDownDownQuark,
 
             (QuarkData::BlueUpQuark, QuarkData::GreenDownQuark, QuarkData::AlphaDownQuark) =>
-                NeutronData::RedBlueAlphaUpDownDownQuark,
+                NeutronData::BlueGreenAlphaUpDownDownQuark,
 
             (QuarkData::BlueUpQuark, QuarkData::RedDownQuark, QuarkData::GreenDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::BlueRedGreenUpDownDownQuark,
 
             (QuarkData::BlueUpQuark, QuarkData::RedDownQuark, QuarkData::AlphaDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::BlueRedAlphaUpDownDownQuark,
 
             (QuarkData::BlueUpQuark, QuarkData::AlphaDownQuark, QuarkData::GreenDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::BlueAlphaGreenUpDownDownQuark,
 
             (QuarkData::BlueUpQuark, QuarkData::AlphaDownQuark, QuarkData::RedDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::BlueAlphaRedUpDownDownQuark,
                 
             // AlphaUpQuark
             (QuarkData::AlphaUpQuark, QuarkData::BlueDownQuark, QuarkData::RedDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::AlphaBlueRedUpDownDownQuark,
 
             (QuarkData::AlphaUpQuark, QuarkData::BlueDownQuark, QuarkData::GreenDownQuark) =>
-                NeutronData::RedBlueAlphaUpDownDownQuark,
+                NeutronData::AlphaBlueGreenUpDownDownQuark,
 
             (QuarkData::AlphaUpQuark, QuarkData::RedDownQuark, QuarkData::BlueDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::AlphaRedBlueUpDownDownQuark,
 
             (QuarkData::AlphaUpQuark, QuarkData::RedDownQuark, QuarkData::GreenDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::AlphaRedGreenUpDownDownQuark,
 
             (QuarkData::AlphaUpQuark, QuarkData::GreenDownQuark, QuarkData::RedDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,
+                NeutronData::AlphaGreenRedUpDownDownQuark,
 
             (QuarkData::AlphaUpQuark, QuarkData::GreenDownQuark, QuarkData::BlueDownQuark) =>
-                NeutronData::RedBlueGreenUpDownDownQuark,         
+                NeutronData::AlphaGreenBlueUpDownDownQuark,         
 
             // Unknown
             _ => NeutronData::Unknown,
@@ -179,5 +179,5 @@ fn it_can_match_a_single_neutron_correctly() {
 
     let first_neutron = neutrons.neutrons[0];
 
-    assert_eq!(first_neutron, NeutronData::RedBlueGreenUpDownDownQuark);
+    assert_eq!(first_neutron, NeutronData::RedGreenBlueUpDownDownQuark);
 }
