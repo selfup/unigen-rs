@@ -48,24 +48,24 @@ However if you want to fill up a bunch of RAM and see how performant the `builde
 
 _warning this used up 80% of my RAM and I have 32GB of RAM!_
 
-**`360` is cubed and then 118 default protons and neutrons are made per atom!**
+**`480` is cubed and then 118 default protons and neutrons are made per atom!**
 
 ```
-$ ./scripts/generate.sh 360
+$ ./scripts/generate.sh 480
 --------------------------------
 Threads: 16
 Building..
 --------------------------------
 Universe built!
 --------------------------------
-Field is Cationic
+Field is Anionic
 --------------------------------
-Atoms: 46656000
-Baryons: 11010816000
-Quarks: 33032448000
+Atoms: 110592000
+Baryons: 26099712000
+Quarks: 78299136000
 --------------------------------
 
-real    0m8.214s
+real    0m15.188s
 user    0m0.000s
 sys     0m0.000s
 ```
