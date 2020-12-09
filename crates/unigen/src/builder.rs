@@ -77,10 +77,10 @@ impl Blocks {
     }
     
     pub fn tick(universe: &mut Vec<core::Block>) -> Vec<core::Block> {
+        let mut uni_copy: Vec<core::Block> = universe.clone();
+        
         let threads = rayon::current_num_threads();
 
-        let mut uni_copy: Vec<core::Block> = universe.clone();
-            
         uni_copy.par_chunks_mut(threads).for_each_init(|| rand::thread_rng(), |rng, blocks| {
             for block in blocks {
                 mutate_blocks_with_new_particles(rng, block);
