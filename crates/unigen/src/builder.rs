@@ -76,18 +76,14 @@ impl Blocks {
         }
     }
     
-    pub fn tick(universe: &mut Vec<core::Block>) -> Vec<core::Block> {
-        let mut uni_copy: Vec<core::Block> = universe.clone();
-        
+    pub fn tick(universe: &mut Vec<core::Block>) {
         let threads = rayon::current_num_threads();
 
-        uni_copy.par_chunks_mut(threads).for_each_init(|| rand::thread_rng(), |rng, blocks| {
+        universe.par_chunks_mut(threads).for_each_init(|| rand::thread_rng(), |rng, blocks| {
             for block in blocks {
                 mutate_blocks_with_new_particles(rng, block);
             }
         });
-    
-        uni_copy
     }
 }
 
@@ -133,7 +129,7 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
 
     let mut generated_universe = Blocks::initialize_universe(parsed_size);
 
-    generated_universe = Blocks::tick(&mut generated_universe);
+    Blocks::tick(&mut generated_universe);
     Blocks::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
 
     println!("{}", "--------------------------------".purple().bold());
