@@ -76,12 +76,12 @@ impl Blocks {
         }
     }
     
-    pub fn tick(parsed_size: u32, universe: &mut Vec<core::Block>) -> Vec<core::Block> {
+    pub fn tick(universe: &mut Vec<core::Block>) -> Vec<core::Block> {
+        let threads = rayon::current_num_threads();
+
         let mut uni_copy: Vec<core::Block> = universe.clone();
-        
-        let chunk_size: usize = (parsed_size) as usize;
-    
-        uni_copy.par_chunks_mut(chunk_size).for_each_init(|| rand::thread_rng(), |rng, blocks| {
+            
+        uni_copy.par_chunks_mut(threads).for_each_init(|| rand::thread_rng(), |rng, blocks| {
             for block in blocks {
                 mutate_blocks_with_new_particles(rng, block);
             }
@@ -133,7 +133,7 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
 
     let mut generated_universe = Blocks::initialize_universe(parsed_size);
 
-    generated_universe = Blocks::tick(parsed_size, &mut generated_universe);
+    generated_universe = Blocks::tick(&mut generated_universe);
     Blocks::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
 
     println!("{}", "--------------------------------".purple().bold());
@@ -181,7 +181,7 @@ fn it_can_infer_the_charge_of_an_atom() {
     let mut electron: [u32; 1] = [0];
     
     let mut generated_universe: Vec<core::Block> = Blocks::initialize_universe(5);
-    Blocks::tick(5, &mut generated_universe);
+    Blocks::tick(&mut generated_universe);
     Blocks::particles(&mut generated_universe, &mut neturon, &mut proton, &mut electron);
     Blocks::atom_charge(&mut generated_universe);
     
