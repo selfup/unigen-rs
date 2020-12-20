@@ -27,7 +27,7 @@ fn main() {
 struct CameraMatcher();
 
 fn setup(
-    mut commands: Commands,
+    commands: &mut Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
@@ -54,7 +54,7 @@ fn setup(
         }
 
         commands
-            .spawn(PbrComponents {
+            .spawn(PbrBundle {
                 mesh: meshes.add(Mesh::from(shape::Icosphere { radius: 0.15, subdivisions: 1 })),
                 material: materials.add(Color::rgb(r, 0.7, 0.6).into()),
                 transform: Transform::from_translation(Vec3::new(x, y, z)),
@@ -64,11 +64,11 @@ fn setup(
     }
 
     commands
-        .spawn(LightComponents {
+        .spawn(LightBundle {
             transform: Transform::from_translation(Vec3::new(0.0, 0.0, 0.0)),
             ..Default::default()
         })
-        .spawn(Camera3dComponents {
+        .spawn(Camera3dBundle {
             transform: Transform::from_translation(Vec3::new(-60.0, 50.0, 50.0))
                 .looking_at(Vec3::default(), Vec3::unit_y()),
             ..Default::default()
