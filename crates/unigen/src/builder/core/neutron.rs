@@ -19,7 +19,7 @@ impl Neutrons {
         }
         
         Self {
-            count, 
+            count,
             neutrons,
         }
     }
