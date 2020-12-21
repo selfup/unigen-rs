@@ -81,85 +81,104 @@ impl ProtonData {
         let second_quark: QuarkData = Quark::data(proton.quarks.1);
         let third_quark: QuarkData = Quark::data(proton.quarks.2);
 
-        match (first_quark, second_quark, third_quark) {
-            // RedUpQuark
-            (QuarkData::RedUpQuark, QuarkData::BlueUpQuark, QuarkData::GreenDownQuark) =>
-                ProtonData::RedBlueGreenUpUpDownQuark,
+        match first_quark {
+            QuarkData::RedUpQuark => {
+                match (second_quark, third_quark) {
+                    (QuarkData::BlueUpQuark, QuarkData::GreenDownQuark) =>
+                        ProtonData::RedBlueGreenUpUpDownQuark,
+    
+                    (QuarkData::BlueUpQuark, QuarkData::AlphaDownQuark) =>
+                        ProtonData::RedBlueAlphaUpUpDownQuark,
+    
+                    (QuarkData::GreenUpQuark, QuarkData::BlueDownQuark) =>
+                        ProtonData::RedGreenBlueUpUpDownQuark,
+    
+                    (QuarkData::GreenUpQuark, QuarkData::AlphaDownQuark) =>
+                        ProtonData::RedGreenAlphaUpUpDownQuark,
+    
+                    (QuarkData::AlphaUpQuark, QuarkData::BlueDownQuark) =>
+                        ProtonData::RedAlphaGreenUpUpDownQuark,
+    
+                    (QuarkData::AlphaUpQuark, QuarkData::GreenDownQuark) =>
+                        ProtonData::RedAlphaGreenUpUpDownQuark,
 
-            (QuarkData::RedUpQuark, QuarkData::BlueUpQuark, QuarkData::AlphaDownQuark) =>
-                ProtonData::RedBlueAlphaUpUpDownQuark,
+                    _ => ProtonData::Unknown,
+                }
+            },
 
-            (QuarkData::RedUpQuark, QuarkData::GreenUpQuark, QuarkData::BlueDownQuark) =>
-                ProtonData::RedGreenBlueUpUpDownQuark,
+            QuarkData::GreenUpQuark => {
+                match(second_quark, third_quark) {
+                    (QuarkData::BlueUpQuark, QuarkData::RedDownQuark) =>
+                        ProtonData::GreenBlueRedUpUpDownQuark,
+    
+                    (QuarkData::BlueUpQuark, QuarkData::AlphaDownQuark) =>
+                        ProtonData::GreenBlueAlphaUpUpDownQuark,
+    
+                    (QuarkData::RedUpQuark, QuarkData::BlueDownQuark) =>
+                        ProtonData::GreenRedBlueUpUpDownQuark,
+    
+                    (QuarkData::RedUpQuark, QuarkData::AlphaDownQuark) =>
+                        ProtonData::GreenRedAlphaUpUpDownQuark,
+    
+                    (QuarkData::AlphaUpQuark, QuarkData::BlueDownQuark) =>
+                        ProtonData::GreenAlphaBlueUpUpDownQuark,
+    
+                    (QuarkData::AlphaUpQuark, QuarkData::RedDownQuark) =>
+                        ProtonData::RedBlueGreenUpUpDownQuark,
 
-            (QuarkData::RedUpQuark, QuarkData::GreenUpQuark, QuarkData::AlphaDownQuark) =>
-                ProtonData::RedGreenAlphaUpUpDownQuark,
+                    _ => ProtonData::Unknown,                    
+                }
+            },
 
-            (QuarkData::RedUpQuark, QuarkData::AlphaUpQuark, QuarkData::BlueDownQuark) =>
-                ProtonData::RedAlphaGreenUpUpDownQuark,
+            QuarkData::BlueUpQuark => {
+                match(second_quark, third_quark) {
+                    (QuarkData::GreenUpQuark, QuarkData::RedDownQuark) =>
+                        ProtonData::BlueGreenRedUpUpDownQuark,
+    
+                    (QuarkData::GreenUpQuark, QuarkData::AlphaDownQuark) =>
+                        ProtonData::BlueGreenAlphaUpUpDownQuark,
+        
+                    (QuarkData::RedUpQuark, QuarkData::GreenDownQuark) =>
+                        ProtonData::BlueRedGreenUpUpDownQuark,
+        
+                    (QuarkData::RedUpQuark, QuarkData::AlphaDownQuark) =>
+                        ProtonData::BlueRedAlphaUpUpDownQuark,
+        
+                    (QuarkData::AlphaUpQuark, QuarkData::GreenDownQuark) =>
+                        ProtonData::BlueAlphaGreenUpUpDownQuark,
+        
+                    (QuarkData::AlphaUpQuark, QuarkData::RedDownQuark) =>
+                        ProtonData::BlueAlphaRedUpUpDownQuark,
 
-            (QuarkData::RedUpQuark, QuarkData::AlphaUpQuark, QuarkData::GreenDownQuark) =>
-                ProtonData::RedAlphaGreenUpUpDownQuark,
+                    _ => ProtonData::Unknown,
+                }
+            }
 
-            // GreenUpQuark
-            (QuarkData::GreenUpQuark, QuarkData::BlueUpQuark, QuarkData::RedDownQuark) =>
-                ProtonData::GreenBlueRedUpUpDownQuark,
+            QuarkData::AlphaUpQuark => {
+                match(second_quark, third_quark) {
+                    (QuarkData::BlueUpQuark, QuarkData::RedDownQuark) =>
+                        ProtonData::AlphaBlueRedUpUpDownQuark,
 
-            (QuarkData::GreenUpQuark, QuarkData::BlueUpQuark, QuarkData::AlphaDownQuark) =>
-                ProtonData::GreenBlueAlphaUpUpDownQuark,
+                    (QuarkData::BlueUpQuark, QuarkData::GreenDownQuark) =>
+                        ProtonData::AlphaBlueGreenUpUpDownQuark,
 
-            (QuarkData::GreenUpQuark, QuarkData::RedUpQuark, QuarkData::BlueDownQuark) =>
-                ProtonData::GreenRedBlueUpUpDownQuark,
+                    (QuarkData::RedUpQuark, QuarkData::BlueDownQuark) =>
+                        ProtonData::AlphaRedBlueUpUpDownQuark,
 
-            (QuarkData::GreenUpQuark, QuarkData::RedUpQuark, QuarkData::AlphaDownQuark) =>
-                ProtonData::GreenRedAlphaUpUpDownQuark,
+                    (QuarkData::RedUpQuark, QuarkData::GreenDownQuark) =>
+                        ProtonData::AlphaRedGreenUpUpDownQuark,
 
-            (QuarkData::GreenUpQuark, QuarkData::AlphaUpQuark, QuarkData::BlueDownQuark) =>
-                ProtonData::GreenAlphaBlueUpUpDownQuark,
+                    (QuarkData::GreenUpQuark, QuarkData::RedDownQuark) =>
+                        ProtonData::AlphaGreenRedUpUpDownQuark,
 
-            (QuarkData::GreenUpQuark, QuarkData::AlphaUpQuark, QuarkData::RedDownQuark) =>
-                ProtonData::RedBlueGreenUpUpDownQuark,
+                    (QuarkData::GreenUpQuark, QuarkData::BlueDownQuark) =>
+                        ProtonData::AlphaGreenBlueUpUpDownQuark,
 
-            // BlueUpQuark
-            (QuarkData::BlueUpQuark, QuarkData::GreenUpQuark, QuarkData::RedDownQuark) =>
-                ProtonData::BlueGreenRedUpUpDownQuark,
+                    _ => ProtonData::Unknown,
+                }
+            }
 
-            (QuarkData::BlueUpQuark, QuarkData::GreenUpQuark, QuarkData::AlphaDownQuark) =>
-                ProtonData::BlueGreenAlphaUpUpDownQuark,
-
-            (QuarkData::BlueUpQuark, QuarkData::RedUpQuark, QuarkData::GreenDownQuark) =>
-                ProtonData::BlueRedGreenUpUpDownQuark,
-
-            (QuarkData::BlueUpQuark, QuarkData::RedUpQuark, QuarkData::AlphaDownQuark) =>
-                ProtonData::BlueRedAlphaUpUpDownQuark,
-
-            (QuarkData::BlueUpQuark, QuarkData::AlphaUpQuark, QuarkData::GreenDownQuark) =>
-                ProtonData::BlueAlphaGreenUpUpDownQuark,
-
-            (QuarkData::BlueUpQuark, QuarkData::AlphaUpQuark, QuarkData::RedDownQuark) =>
-                ProtonData::BlueAlphaRedUpUpDownQuark,
-                
-            // AlphaUpQuark
-            (QuarkData::AlphaUpQuark, QuarkData::BlueUpQuark, QuarkData::RedDownQuark) =>
-                ProtonData::AlphaBlueRedUpUpDownQuark,
-
-            (QuarkData::AlphaUpQuark, QuarkData::BlueUpQuark, QuarkData::GreenDownQuark) =>
-                ProtonData::AlphaBlueGreenUpUpDownQuark,
-
-            (QuarkData::AlphaUpQuark, QuarkData::RedUpQuark, QuarkData::BlueDownQuark) =>
-                ProtonData::AlphaRedBlueUpUpDownQuark,
-
-            (QuarkData::AlphaUpQuark, QuarkData::RedUpQuark, QuarkData::GreenDownQuark) =>
-                ProtonData::AlphaRedGreenUpUpDownQuark,
-
-            (QuarkData::AlphaUpQuark, QuarkData::GreenUpQuark, QuarkData::RedDownQuark) =>
-                ProtonData::AlphaGreenRedUpUpDownQuark,
-
-            (QuarkData::AlphaUpQuark, QuarkData::GreenUpQuark, QuarkData::BlueDownQuark) =>
-                ProtonData::AlphaGreenBlueUpUpDownQuark,         
-
-            // Unknown
-            _ => ProtonData::Unknown,
+            _ => ProtonData::Unknown,      
         }
     }
 }
