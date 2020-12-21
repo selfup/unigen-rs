@@ -81,8 +81,8 @@ impl NeutronData {
         let second_quark: QuarkData = Quark::data(neutron.quarks.1);
         let third_quark: QuarkData = Quark::data(neutron.quarks.2);
 
-        match (first_quark, second_quark, third_quark) {
-            (QuarkData::RedUpQuark, _, _) => {
+        match first_quark {
+            QuarkData::RedUpQuark => {
                 match (first_quark, second_quark, third_quark) {
                     (QuarkData::RedUpQuark, QuarkData::BlueDownQuark, QuarkData::GreenDownQuark) =>
                         NeutronData::RedBlueGreenUpDownDownQuark,
@@ -102,11 +102,11 @@ impl NeutronData {
                     (QuarkData::RedUpQuark, QuarkData::AlphaDownQuark, QuarkData::GreenDownQuark) =>
                         NeutronData::RedAlphaGreenUpDownDownQuark,
 
-                    (_, _, _) => NeutronData::Unknown,
+                    _ => NeutronData::Unknown,
                 }
             },
 
-            (QuarkData::GreenUpQuark, _, _) => {
+            QuarkData::GreenUpQuark => {
                 match (first_quark, second_quark, third_quark) {
                     (QuarkData::GreenUpQuark, QuarkData::BlueDownQuark, QuarkData::RedDownQuark) =>
                         NeutronData::GreenBlueRedUpDownDownQuark,
@@ -126,12 +126,12 @@ impl NeutronData {
                     (QuarkData::GreenUpQuark, QuarkData::AlphaDownQuark, QuarkData::RedDownQuark) =>
                         NeutronData::GreenAlphaRedUpDownDownQuark,
 
-                    (_, _, _) => NeutronData::Unknown,
+                    _ => NeutronData::Unknown,
                 }
             },
 
 
-            (QuarkData::BlueUpQuark, _, _) => {
+            QuarkData::BlueUpQuark => {
                 match (first_quark, second_quark, third_quark) {
                     (QuarkData::BlueUpQuark, QuarkData::GreenDownQuark, QuarkData::RedDownQuark) =>
                         NeutronData::BlueGreenRedUpDownDownQuark,
@@ -151,11 +151,11 @@ impl NeutronData {
                     (QuarkData::BlueUpQuark, QuarkData::AlphaDownQuark, QuarkData::RedDownQuark) =>
                         NeutronData::BlueAlphaRedUpDownDownQuark,
 
-                    (_, _, _) => NeutronData::Unknown,
+                    _ => NeutronData::Unknown,
                 }
             },
 
-            (QuarkData::AlphaUpQuark, _, _) => {
+            QuarkData::AlphaUpQuark => {
                 match (first_quark, second_quark, third_quark) {
                     (QuarkData::AlphaUpQuark, QuarkData::BlueDownQuark, QuarkData::RedDownQuark) =>
                         NeutronData::AlphaBlueRedUpDownDownQuark,
@@ -175,11 +175,11 @@ impl NeutronData {
                     (QuarkData::AlphaUpQuark, QuarkData::GreenDownQuark, QuarkData::BlueDownQuark) =>
                         NeutronData::AlphaGreenBlueUpDownDownQuark,   
 
-                    (_, _, _) => NeutronData::Unknown,
+                    _ => NeutronData::Unknown,
                 }
             },
 
-            (_, _, _) => NeutronData::Unknown,
+            _ => NeutronData::Unknown,
         }
     }
 }
