@@ -97,12 +97,12 @@ pub fn calculate_charge(block: &mut core::Block) {
     }
 }
 
-pub fn mutate_blocks_with_new_particles(rng: &mut rand::rngs::ThreadRng, block: &mut core::Block) {
+pub fn mutate_blocks_with_new_particles<R: Rng>(rng: &mut R, block: &mut core::Block) {
     let (electrons, protons, neutrons, rotation): (u32, u32, u32, u8) = (
-        rng.gen_range(0, 118),
-        rng.gen_range(0, 118),
-        rng.gen_range(0, 118),
-        rng.gen_range(1, 6),
+        rng.gen_range(0..118),
+        rng.gen_range(0..118),
+        rng.gen_range(0..118),
+        rng.gen_range(1..6),
     );
 
     match rotation {
