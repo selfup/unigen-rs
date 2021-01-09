@@ -12,15 +12,17 @@ const DEFAULT_SIZE: u32 = 30;
 
 use unigen::builder;
 
+type Material = StandardMaterial;
+
 #[allow(unused_imports)]
 
 struct ChargeMaterials {
-    negative_mat: Handle<StandardMaterial>,
-    positive_mats: Vec<Handle<StandardMaterial>>,
+    negative_mat: Handle<Material>,
+    positive_mats: Vec<Handle<Material>>,
 }
 
 impl ChargeMaterials {
-    fn new(mut asset_server: ResMut<Assets<StandardMaterial>>) -> Self {
+    fn new(mut asset_server: ResMut<Assets<Material>>) -> Self {
         Self {
             negative_mat: asset_server.add(Color::rgb(2.0, 0., 1.).into()),
             positive_mats: {
@@ -30,7 +32,7 @@ impl ChargeMaterials {
             },
         }
     }
-    fn get(&self, r: i8) -> &Handle<StandardMaterial> {
+    fn get(&self, r: i8) -> &Handle<Material> {
         if r < 0 {
             &self.negative_mat
         } else {
@@ -60,7 +62,7 @@ struct CameraMatcher();
 fn setup(
     commands: &mut Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    materials: ResMut<Assets<StandardMaterial>>,
+    materials: ResMut<Assets<Material>>,
 ) {
     let parsed_size: u32 = if let Some(arg) = env::args().nth(1) {
         arg.trim().parse().unwrap()
