@@ -11,7 +11,5 @@ members = ["crates/*"]
 unigen = { path = "crates/unigen", version = "0.1.0", default-features = false }
 
 rand = "0.8.1"
-rayon = "1.5.0"
 bevy = "0.4.0"
 num_cpus = "1.13.0"
-arr_macro = "0.1.3"
