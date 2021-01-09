@@ -1,20 +1,51 @@
 extern crate rand;
 
-use std::env;
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, PrintDiagnosticsPlugin};
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
+use bevy::tasks::prelude::*;
+use bevy::tasks::ParallelIterator;
+use std::env;
 
-use rayon::prelude::*;
+const CHUNK_SIZE: usize = 128;
+const DEFAULT_SIZE: u32 = 30;
 
 use unigen::builder;
 
 #[allow(unused_imports)]
-use rand::Rng;
+
+struct ChargeMaterials {
+    negative_mat: Handle<StandardMaterial>,
+    positive_mats: Vec<Handle<StandardMaterial>>,
+}
+
+impl ChargeMaterials {
+    fn new(mut asset_server: ResMut<Assets<StandardMaterial>>) -> Self {
+        Self {
+            negative_mat: asset_server.add(Color::rgb(2.0, 0., 1.).into()),
+            positive_mats: {
+                (0..std::i8::MAX)
+                    .map(|r| asset_server.add(Color::rgb(r as f32, 0., 1.).into()))
+                    .collect()
+            },
+        }
+    }
+    fn get(&self, r: i8) -> &Handle<StandardMaterial> {
+        if r < 0 {
+            &self.negative_mat
+        } else {
+            &self.positive_mats[r as usize]
+        }
+    }
+}
+
 
 fn main() {
     App::build()
         .add_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
+        .add_plugin(PrintDiagnosticsPlugin::default())
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_startup_system(setup.system())
         .add_system(update_block_atoms.system())
         .add_system(update_block_spheres.system())
@@ -29,39 +60,38 @@ struct CameraMatcher();
 fn setup(
     commands: &mut Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
+    materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let mut size = String::new();
-    let args: Vec<String> = env::args().collect();
+    let parsed_size: u32 = if let Some(arg) = env::args().nth(1) {
+        arg.trim().parse().unwrap()
+    } else {
+        DEFAULT_SIZE
+    };
 
-    if args.len() > 1 {
-        size = args[1].clone();
-    }
-
-    let parsed_size = size.trim().parse::<u32>().unwrap();
+    let charged_mats = ChargeMaterials::new(materials);
 
     let blocks = builder::generate_universe(parsed_size);
+    let mesh_handle = meshes.add(Mesh::from(shape::Icosphere {
+        radius: 0.15,
+        subdivisions: 1,
+    }));
 
     for block in blocks {
         let y = block.y as f32;
         let x = block.x as f32;
         let z = block.z as f32;
 
-        let mut r = block.charge as f32;
-
-        if r < 0.0 {
-            r = 2.0;
-        }
-
+        let r = block.charge;
         commands
             .spawn(PbrBundle {
-                mesh: meshes.add(Mesh::from(shape::Icosphere { radius: 0.15, subdivisions: 1 })),
-                material: materials.add(Color::rgb(r, 0.7, 0.6).into()),
+                mesh: mesh_handle.clone(),
+                material: charged_mats.get(r).clone(),
                 transform: Transform::from_translation(Vec3::new(x, y, z)),
                 ..Default::default()
             })
             .with(block);
     }
+    commands.insert_resource(charged_mats);
 
     commands
         .spawn(LightBundle {
@@ -77,47 +107,21 @@ fn setup(
 }
 
 fn update_block_spheres(
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    mut query: Query<(&Handle<StandardMaterial>, &builder::core::Block)>,
+    pool: Res<ComputeTaskPool>,
+    mats: Res<ChargeMaterials>,
+    mut query: Query<(&mut Handle<StandardMaterial> , &builder::core::Block)>,
 ) {
-    for (material_handle, block) in query.iter_mut() {
-        update_albedo(&mut materials, material_handle, block);
-    }
+    query.par_iter_mut(CHUNK_SIZE).for_each(&pool , |(mut material_handle , block)|{
+        let r = block.charge;
+        *material_handle = mats.get(r).clone();
+    });
 }
 
-fn update_albedo(
-    materials: &mut ResMut<Assets<StandardMaterial>>,
-    material_handle: &Handle<StandardMaterial>,
-    block: &builder::core::Block,
-) {
-    let mut material = materials.get_mut(material_handle).unwrap();
-            
-    let mut r = block.charge as f32;
+fn update_block_atoms(pool: Res<ComputeTaskPool>, mut query: Query<&mut builder::core::Block>) {
+    query.par_iter_mut(CHUNK_SIZE).for_each(&pool, |mut block| {
+        builder::mutate_blocks_with_new_particles(&mut rand::thread_rng(), &mut block);
 
-    if r < 0.0 {
-        r = 2.0;
-    }
-
-    material.albedo = Color::rgb(r, 0.0, 1.0).into();
-}
-
-fn update_block_atoms(
-    mut query: Query<&mut builder::core::Block>,
-) {
-    let mut query_vec = vec![];
-    
-    for block in query.iter_mut() {
-        query_vec.push(block);
-    }
-
-    let chunks: usize = query_vec.len() / 2 / 2 / 2;
-
-    query_vec.par_chunks_mut(chunks).for_each_init(|| rand::thread_rng(), |rng, blocks| {
-        for block in blocks {
-            builder::mutate_blocks_with_new_particles(rng, block);
-    
-            builder::calculate_charge(block);
-        }
+        builder::calculate_charge(&mut block);
     });
 }
 
@@ -129,32 +133,25 @@ fn camera_movement(
     let input_dir = get_input_dir(keyboard_input);
 
     if input_dir.length() > 0. {
-        for (mut transform,  _camera) in query.iter_mut() {
+        for (mut transform, _camera) in query.iter_mut() {
             let input_dir = (transform.rotation * input_dir).normalize();
- 
+
             transform.translation += input_dir * (time.delta_seconds_f64() * 50.0) as f32;
         }
     }
 }
 
 fn random_movement(
-    mut query: Query<(&mut Transform, &mut builder::core::Block)>,
+    pool: Res<ComputeTaskPool>,
+    mut query: Query<(&mut Transform, &builder::core::Block)>,
 ) {
-    let mut query_vec = vec![];
-    
-    for (transform, block) in query.iter_mut() {
-        query_vec.push((transform, block));
-    }
-
-    let chunks: usize = query_vec.len() / 2 / 2 / 2;
-
-    query_vec.par_chunks_mut(chunks).for_each(|entities| {
-        for (transform,  block) in entities {
+    query
+        .par_iter_mut(CHUNK_SIZE)
+        .for_each(&pool, |(mut transform, block)| {
             let new_translation = Vec3::new(block.x as f32, block.y as f32, block.z as f32);
 
             transform.translation = new_translation;
-        }
-    });
+        });
 }
 
 fn get_input_dir(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {
@@ -184,7 +181,7 @@ fn get_input_dir(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {
         let up = Vec3::unit_y();
         input_dir += up;
     }
-    
+
     if keyboard_input.pressed(KeyCode::LShift) {
         let up = Vec3::unit_y();
         input_dir -= up;
