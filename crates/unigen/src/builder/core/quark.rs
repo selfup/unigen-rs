@@ -16,7 +16,7 @@ pub struct Quark {
 
 impl Quark {
     pub fn new(color_charge: u8, electric_charge: u8) -> Quark {
-        Quark{
+        Quark {
             color: StrongCharge::new(color_charge),
             electric_charge: ElectricCharge::new(electric_charge),
         }
@@ -25,26 +25,18 @@ impl Quark {
     pub fn data(quark: Quark) -> QuarkData {
         #[allow(unreachable_patterns)]
         match (quark.color, quark.electric_charge) {
-            (StrongCharge::Red, ElectricCharge::NegativeOneThird) =>
-                QuarkData::RedDownQuark,
-            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::RedUpQuark,
+            (StrongCharge::Red, ElectricCharge::NegativeOneThird) => QuarkData::RedDownQuark,
+            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) => QuarkData::RedUpQuark,
 
-            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) =>
-                QuarkData::BlueDownQuark, 
-            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::BlueUpQuark, 
-            
-            (StrongCharge::Green, ElectricCharge::NegativeOneThird) =>
-                QuarkData::GreenDownQuark, 
-            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::GreenUpQuark, 
-            
-            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) =>
-                QuarkData::AlphaDownQuark, 
-            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::AlphaUpQuark,
-            
+            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) => QuarkData::BlueDownQuark,
+            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) => QuarkData::BlueUpQuark,
+
+            (StrongCharge::Green, ElectricCharge::NegativeOneThird) => QuarkData::GreenDownQuark,
+            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) => QuarkData::GreenUpQuark,
+
+            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) => QuarkData::AlphaDownQuark,
+            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) => QuarkData::AlphaUpQuark,
+
             _ => QuarkData::Unknown,
         }
     }
