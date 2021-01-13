@@ -8,16 +8,52 @@ use self::core::{proton, neutron};
 
 pub struct Blocks {}
 
+fn index_to_xyz(size: u32 , idx: u32) -> (u32 , u32 , u32){
+    let sz_2 = size * size;
+    let x = idx / sz_2;
+    let w = idx % sz_2;
+    let y = w / size;
+    let z = w % size;
+    (x , y ,z)
+}
+
 impl Blocks {
     pub fn initialize_universe(parsed_size: u32) -> Vec<core::Block> {
         let mut id: u32 = 0;
+        let total_size = parsed_size.checked_mul(parsed_size.checked_mul(parsed_size).unwrap()).unwrap();
         
-        let vec_size = (parsed_size * parsed_size * parsed_size) as usize;
+        let vec_size = total_size as usize;
         
-        let mut universe = Vec::with_capacity(vec_size);
         
         println!("Threads: {}\nBuilding..", rayon::current_num_threads());
+
+
+        (0..total_size).into_par_iter().map(|i|{
+            let (x , y , z) = index_to_xyz(parsed_size , i);
+            let (electrons, protons, neutrons): (u32, u32, u32) = (0, 0, 0);
+
+                    let generated_protons = proton::Protons::new(protons);
+                    let generated_neutrons = neutron::Neutrons::new(neutrons);
+    
+            core::Block {
+                        id,
+                        x,
+                        y,
+                        z,
+                        charge: 0,
+                        atom: core::Atom {
+                           electrons,
+                            nucleus: core::Nucleus {
+                                baryon: core::Baryon {
+                                    protons: generated_protons,
+                                    neutrons: generated_neutrons,
+                                },
+                            },
+                        },
+                    }
+        }).collect()
         
+        /*
         for x in 0..parsed_size {
             for y in 0..parsed_size {
                 for z in 0..parsed_size {                
@@ -49,12 +85,21 @@ impl Blocks {
         }
     
         universe
+        */
     }
     
-    pub fn particles(universe: &mut Vec<core::Block>, neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
-        neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.neutrons.count).sum();
-        proton[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.protons.count).sum();
-        electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
+    pub fn particles(universe: &mut [core::Block], neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
+        rayon::scope(|s| {
+            s.spawn(|_| {
+                neutron[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.neutrons.count).sum();
+            });
+            s.spawn(|_|{
+                proton[0] = universe.par_iter().map(|i| i.atom.nucleus.baryon.protons.count).sum();
+            });
+            s.spawn(|_|{
+                electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
+            });
+        });
     }
     
     pub fn charge_of_field(proton: &mut [u32; 1], electron: &mut [u32; 1], u: u32) {
@@ -70,19 +115,16 @@ impl Blocks {
         }
     }
     
-    pub fn atom_charge(universe: &mut Vec<core::Block>) {
+    pub fn atom_charge(universe: &mut [core::Block]) {
         for block in universe {
             calculate_charge(block);
         }
     }
     
-    pub fn tick(universe: &mut Vec<core::Block>) {
-        let threads = rayon::current_num_threads();
+    pub fn tick(universe: &mut [core::Block]) {
 
-        universe.par_chunks_mut(threads).for_each_init(|| rand::thread_rng(), |rng, blocks| {
-            for block in blocks {
+        universe.par_iter_mut().for_each_init(rand::thread_rng , |rng, block| {
                 mutate_blocks_with_new_particles(rng, block);
-            }
         });
     }
 }
