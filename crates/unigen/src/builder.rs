@@ -7,6 +7,7 @@ pub mod core;
 use self::core::{proton, neutron};
 
 pub struct Blocks {}
+const CHUNK_SIZE: usize = 64;
 
 fn index_to_xyz(size: u32 , idx: u32) -> (u32 , u32 , u32){
     let sz_2 = size * size;
@@ -19,11 +20,9 @@ fn index_to_xyz(size: u32 , idx: u32) -> (u32 , u32 , u32){
 
 impl Blocks {
     pub fn initialize_universe(parsed_size: u32) -> Vec<core::Block> {
-        let mut id: u32 = 0;
+        use std::sync::atomic::{AtomicU32 , Ordering};
+        let id: AtomicU32 = 0.into();
         let total_size = parsed_size.checked_mul(parsed_size.checked_mul(parsed_size).unwrap()).unwrap();
-        
-        let vec_size = total_size as usize;
-        
         
         println!("Threads: {}\nBuilding..", rayon::current_num_threads());
 
@@ -36,7 +35,7 @@ impl Blocks {
                     let generated_neutrons = neutron::Neutrons::new(neutrons);
     
             core::Block {
-                        id,
+                        id: id.fetch_add(1 , Ordering::Relaxed),
                         x,
                         y,
                         z,
@@ -52,40 +51,6 @@ impl Blocks {
                         },
                     }
         }).collect()
-        
-        /*
-        for x in 0..parsed_size {
-            for y in 0..parsed_size {
-                for z in 0..parsed_size {                
-                    let (electrons, protons, neutrons): (u32, u32, u32) = (0, 0, 0);
-
-                    let generated_protons = proton::Protons::new(protons);
-                    let generated_neutrons = neutron::Neutrons::new(neutrons);
-    
-                    universe.push(core::Block {
-                        id,
-                        x,
-                        y,
-                        z,
-                        charge: 0,
-                        atom: core::Atom {
-                           electrons,
-                            nucleus: core::Nucleus {
-                                baryon: core::Baryon {
-                                    protons: generated_protons,
-                                    neutrons: generated_neutrons,
-                                },
-                            },
-                        },
-                    });
-    
-                    id += 1;
-                }
-            }
-        }
-    
-        universe
-        */
     }
     
     pub fn particles(universe: &mut [core::Block], neutron: &mut [u32; 1], proton: &mut [u32; 1], electron: &mut [u32; 1]) {
@@ -116,15 +81,17 @@ impl Blocks {
     }
     
     pub fn atom_charge(universe: &mut [core::Block]) {
-        for block in universe {
-            calculate_charge(block);
-        }
+        universe.par_chunks_mut(CHUNK_SIZE).for_each(|chunk|{
+            for b in chunk { calculate_charge(b) }
+        });
     }
     
     pub fn tick(universe: &mut [core::Block]) {
 
-        universe.par_iter_mut().for_each_init(rand::thread_rng , |rng, block| {
+        universe.par_chunks_mut(CHUNK_SIZE).for_each_init(rand::thread_rng , |rng, chunk| {
+            for block in chunk{
                 mutate_blocks_with_new_particles(rng, block);
+            }
         });
     }
 }
