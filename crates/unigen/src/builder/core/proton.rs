@@ -33,7 +33,7 @@ pub struct Proton {
 }
 
 impl Proton {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             quarks: (Quark::new(0, 1), Quark::new(1, 1), Quark::new(2, 0)),
         }
@@ -80,7 +80,7 @@ pub enum ProtonData {
 }
 
 impl ProtonData {
-    pub fn new(proton: Proton) -> Self {
+    pub const fn new(proton: Proton) -> Self {
         let first_quark: QuarkData = Quark::data(proton.quarks.0);
         let second_quark: QuarkData = Quark::data(proton.quarks.1);
         let third_quark: QuarkData = Quark::data(proton.quarks.2);
