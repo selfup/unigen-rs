@@ -12,17 +12,6 @@ impl Neutrons {
         neutrons[0..(count as usize)]
             .iter_mut()
             .for_each(|n| *n = NeutronData::new(Neutron::new()));
-
-        /*
-        for idx in 0..count as usize {
-            let neutron = Neutron::new();
-
-            let neutron_data = NeutronData::new(neutron);
-
-            neutrons[idx] = neutron_data;
-        }
-        */
-
         Self { count, neutrons }
     }
 }

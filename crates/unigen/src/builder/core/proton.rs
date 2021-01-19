@@ -12,17 +12,6 @@ impl Protons {
         protons[0..(count as usize)]
             .iter_mut()
             .for_each(|p| *p = ProtonData::new(Proton::new()));
-
-        /*
-        for idx in 0..count as usize {
-            let proton = Proton::new();
-
-            let proton_data = ProtonData::new(proton);
-
-            protons[idx] = proton_data;
-        }
-
-        */
         Self { count, protons }
     }
 }

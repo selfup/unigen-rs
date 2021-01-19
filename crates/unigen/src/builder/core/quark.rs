@@ -65,7 +65,7 @@ pub enum StrongCharge {
 }
 
 impl StrongCharge {
-    pub const  fn new(color: u8) -> StrongCharge {
+    pub const fn new(color: u8) -> StrongCharge {
         match color {
             0 => StrongCharge::Red,
             1 => StrongCharge::Green,
