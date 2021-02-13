@@ -41,7 +41,6 @@ impl ChargeMaterials {
     }
 }
 
-
 fn main() {
     App::build()
         .add_resource(Msaa { samples: 4 })
@@ -111,12 +110,14 @@ fn setup(
 fn update_block_spheres(
     pool: Res<ComputeTaskPool>,
     mats: Res<ChargeMaterials>,
-    mut query: Query<(&mut Handle<StandardMaterial> , &builder::core::Block)>,
+    mut query: Query<(&mut Handle<StandardMaterial>, &builder::core::Block)>,
 ) {
-    query.par_iter_mut(CHUNK_SIZE).for_each(&pool , |(mut material_handle , block)|{
-        let r = block.charge;
-        *material_handle = mats.get(r).clone();
-    });
+    query
+        .par_iter_mut(CHUNK_SIZE)
+        .for_each(&pool, |(mut material_handle, block)| {
+            let r = block.charge;
+            *material_handle = mats.get(r).clone();
+        });
 }
 
 fn update_block_atoms(pool: Res<ComputeTaskPool>, mut query: Query<&mut builder::core::Block>) {

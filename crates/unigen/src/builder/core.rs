@@ -1,10 +1,10 @@
-pub mod quark;
-pub mod proton;
 pub mod neutron;
+pub mod proton;
+pub mod quark;
 
-use quark:: {Quarks};
-use proton::{Protons};
-use neutron::{Neutrons};
+use neutron::Neutrons;
+use proton::Protons;
+use quark::Quarks;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Block {

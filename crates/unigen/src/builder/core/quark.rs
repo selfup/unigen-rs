@@ -15,36 +15,28 @@ pub struct Quark {
 }
 
 impl Quark {
-    pub fn new(color_charge: u8, electric_charge: u8) -> Quark {
-        Quark{
+    pub const fn new(color_charge: u8, electric_charge: u8) -> Quark {
+        Quark {
             color: StrongCharge::new(color_charge),
             electric_charge: ElectricCharge::new(electric_charge),
         }
     }
 
-    pub fn data(quark: Quark) -> QuarkData {
+    pub const fn data(quark: Quark) -> QuarkData {
         #[allow(unreachable_patterns)]
         match (quark.color, quark.electric_charge) {
-            (StrongCharge::Red, ElectricCharge::NegativeOneThird) =>
-                QuarkData::RedDownQuark,
-            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::RedUpQuark,
+            (StrongCharge::Red, ElectricCharge::NegativeOneThird) => QuarkData::RedDownQuark,
+            (StrongCharge::Red, ElectricCharge::PositiveTwoThirds) => QuarkData::RedUpQuark,
 
-            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) =>
-                QuarkData::BlueDownQuark, 
-            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::BlueUpQuark, 
-            
-            (StrongCharge::Green, ElectricCharge::NegativeOneThird) =>
-                QuarkData::GreenDownQuark, 
-            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::GreenUpQuark, 
-            
-            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) =>
-                QuarkData::AlphaDownQuark, 
-            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) =>
-                QuarkData::AlphaUpQuark,
-            
+            (StrongCharge::Blue, ElectricCharge::NegativeOneThird) => QuarkData::BlueDownQuark,
+            (StrongCharge::Blue, ElectricCharge::PositiveTwoThirds) => QuarkData::BlueUpQuark,
+
+            (StrongCharge::Green, ElectricCharge::NegativeOneThird) => QuarkData::GreenDownQuark,
+            (StrongCharge::Green, ElectricCharge::PositiveTwoThirds) => QuarkData::GreenUpQuark,
+
+            (StrongCharge::Alpha, ElectricCharge::NegativeOneThird) => QuarkData::AlphaDownQuark,
+            (StrongCharge::Alpha, ElectricCharge::PositiveTwoThirds) => QuarkData::AlphaUpQuark,
+
             _ => QuarkData::Unknown,
         }
     }
@@ -73,7 +65,7 @@ pub enum StrongCharge {
 }
 
 impl StrongCharge {
-    pub fn new(color: u8) -> StrongCharge {
+    pub const fn new(color: u8) -> StrongCharge {
         match color {
             0 => StrongCharge::Red,
             1 => StrongCharge::Green,
@@ -92,7 +84,7 @@ pub enum ElectricCharge {
 }
 
 impl ElectricCharge {
-    pub fn new(charge: u8) -> ElectricCharge {
+    pub const fn new(charge: u8) -> ElectricCharge {
         match charge {
             0 => ElectricCharge::NegativeOneThird,
             1 => ElectricCharge::PositiveTwoThirds,
