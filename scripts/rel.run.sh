@@ -2,6 +2,4 @@
 
 set -euox pipefail
 
-cargo build -q --release
-
-cargo run -q --release $1
+cargo run -q --release "$1"

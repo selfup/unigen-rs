@@ -2,6 +2,4 @@
 
 set -euox pipefail
 
-cargo build
-
-cargo run $1
+cargo run "$1"

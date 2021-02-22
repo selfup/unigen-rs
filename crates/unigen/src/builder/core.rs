@@ -9,9 +9,9 @@ use quark::Quarks;
 #[derive(Debug, Copy, Clone)]
 pub struct Block {
     pub id: u32,
-    pub x: u32,
-    pub y: u32,
-    pub z: u32,
+    pub x: i32,
+    pub y: i32,
+    pub z: i32,
     pub charge: i8,
     pub atom: Atom,
 }

@@ -3,11 +3,8 @@
 set -euo pipefail
 
 # simulator
-cargo test --release -- --nocapture
+cargo test -- --nocapture
 
 # unigen
-cd crates/unigen
+( cd crates/unigen && exec cargo test -- --nocapture )
 
-cargo test --release -- --nocapture
-
-cd ../..

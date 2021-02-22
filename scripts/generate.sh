@@ -2,10 +2,5 @@
 
 set -euo pipefail
 
-cd crates/unigen
 
-cargo build -q --release
-
-time cargo run -q --release $1
-
-cd ../../
+( cd crates/unigen && time cargo run -q --release "$1")
