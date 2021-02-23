@@ -2,6 +2,7 @@
 
 set -eo pipefail
 
+cd crates/unigen
 
 cargo build -q --release
 
