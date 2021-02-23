@@ -35,4 +35,3 @@ fi
 time cargo run -q --release $1
 
 cd ../../
-
