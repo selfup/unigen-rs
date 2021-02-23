@@ -7,4 +7,3 @@ cargo test -- --nocapture
 
 # unigen
 ( cd crates/unigen && exec cargo test -- --nocapture )
-
