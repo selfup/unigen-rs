@@ -2,7 +2,6 @@
 
 set -eo pipefail
 
-cd crates/unigen
 
 cargo build -q --release
 
@@ -35,3 +34,4 @@ fi
 time cargo run -q --release $1
 
 cd ../../
+

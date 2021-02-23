@@ -37,9 +37,9 @@ impl Blocks {
 
             core::Block {
                 id: i,
-                x,
-                y,
-                z,
+                x: x as i32,
+                y: y as i32,
+                z: z as i32,
                 charge: 0,
                 atom: core::Atom {
                     electrons,
