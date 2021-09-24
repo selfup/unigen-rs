@@ -12,7 +12,7 @@ Warming up!
 ---
 '
 
-for size in 30 50 70 100 200 300 400 480
+for size in 30 50 70 100 200 260
 do
     sleep 1s
     time cargo run -q --release $size
@@ -20,7 +20,7 @@ done
     
 echo '
 ---
-32GB of RAM Warmup done!
+16GB of RAM Warmup done!
 ---'
 
 cd ../../
