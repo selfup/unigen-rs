@@ -151,7 +151,7 @@ pub fn mutate_blocks_with_new_particles<R: Rng>(rng: &mut R, block: &mut core::B
 pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     println!("{}", "--------------------------------".red().bold());
 
-    let mut neturon: [u32; 1] = [0];
+    let mut neutron: [u32; 1] = [0];
     let mut proton: [u32; 1] = [0];
     let mut electron: [u32; 1] = [0];
 
@@ -160,7 +160,7 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     Blocks::tick(&mut generated_universe);
     Blocks::particles(
         &mut generated_universe,
-        &mut neturon,
+        &mut neutron,
         &mut proton,
         &mut electron,
     );
@@ -205,7 +205,7 @@ fn it_can_begin() {
 
 #[test]
 fn it_can_infer_the_charge_of_an_atom() {
-    let mut neturon: [u32; 1] = [0];
+    let mut neutron: [u32; 1] = [0];
     let mut proton: [u32; 1] = [0];
     let mut electron: [u32; 1] = [0];
 
@@ -213,7 +213,7 @@ fn it_can_infer_the_charge_of_an_atom() {
     Blocks::tick(&mut generated_universe);
     Blocks::particles(
         &mut generated_universe,
-        &mut neturon,
+        &mut neutron,
         &mut proton,
         &mut electron,
     );
@@ -224,15 +224,15 @@ fn it_can_infer_the_charge_of_an_atom() {
 
 #[test]
 fn it_can_sense_the_field() {
-    let mut neturon: [u32; 1] = [0];
+    let mut neutron: [u32; 1] = [0];
     let mut proton: [u32; 1] = [0];
     let mut electron: [u32; 1] = [0];
 
     let mut universe = Blocks::initialize_universe(2);
-    Blocks::particles(&mut universe, &mut neturon, &mut proton, &mut electron);
+    Blocks::particles(&mut universe, &mut neutron, &mut proton, &mut electron);
 
     assert_eq!(universe.len(), 8);
-    assert_eq!(neturon.len(), 1);
+    assert_eq!(neutron.len(), 1);
     assert_eq!(proton.len(), 1);
     assert_eq!(electron.len(), 1);
 }
