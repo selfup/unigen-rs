@@ -25,8 +25,9 @@ impl Blocks {
             .unwrap();
 
         let vec_size = total_size as usize;
-        println!("Threads: {}\nBuilding..", rayon::current_num_threads());
         let mut ret = Vec::with_capacity(vec_size);
+
+        println!("Threads: {}\nBuilding..", rayon::current_num_threads());
 
         ret.par_extend((0..total_size).into_par_iter().map(|i| {
             let (x, y, z) = index_to_xyz(parsed_size, i);
@@ -68,12 +69,14 @@ impl Blocks {
                     .map(|i| i.atom.nucleus.baryon.neutrons.count)
                     .sum();
             });
+
             s.spawn(|_| {
                 proton[0] = universe
                     .par_iter()
                     .map(|i| i.atom.nucleus.baryon.protons.count)
                     .sum();
             });
+
             s.spawn(|_| {
                 electron[0] = universe.par_iter().map(|i| i.atom.electrons).sum();
             });
@@ -95,8 +98,8 @@ impl Blocks {
 
     pub fn atom_charge(universe: &mut [core::Block]) {
         universe.par_chunks_mut(CHUNK_SIZE).for_each(|chunk| {
-            for b in chunk {
-                calculate_charge(b)
+            for block in chunk {
+                calculate_charge(block)
             }
         });
     }
@@ -175,6 +178,7 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     let default_baryons = 236;
     let quarks_per_baryon = 3;
     let generated_universe_length = generated_universe.len();
+
     let total_atoms = generated_universe_length;
     let total_baryons = generated_universe_length * default_baryons;
     let total_quarks = generated_universe_length * default_baryons * quarks_per_baryon;
@@ -210,13 +214,16 @@ fn it_can_infer_the_charge_of_an_atom() {
     let mut electron: [u32; 1] = [0];
 
     let mut generated_universe: Vec<core::Block> = Blocks::initialize_universe(5);
+
     Blocks::tick(&mut generated_universe);
+
     Blocks::particles(
         &mut generated_universe,
         &mut neutron,
         &mut proton,
         &mut electron,
     );
+
     Blocks::atom_charge(&mut generated_universe);
 
     assert_eq!(generated_universe.len(), 125);
@@ -229,6 +236,7 @@ fn it_can_sense_the_field() {
     let mut electron: [u32; 1] = [0];
 
     let mut universe = Blocks::initialize_universe(2);
+
     Blocks::particles(&mut universe, &mut neutron, &mut proton, &mut electron);
 
     assert_eq!(universe.len(), 8);

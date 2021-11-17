@@ -9,9 +9,11 @@ pub struct Neutrons {
 impl Neutrons {
     pub fn new(count: u32) -> Self {
         let mut neutrons = [NeutronData::Unknown; 118];
+
         neutrons[0..(count as usize)]
             .iter_mut()
             .for_each(|n| *n = NeutronData::new(Neutron::new()));
+
         Self { count, neutrons }
     }
 }

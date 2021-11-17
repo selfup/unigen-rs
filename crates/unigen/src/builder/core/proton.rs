@@ -9,9 +9,11 @@ pub struct Protons {
 impl Protons {
     pub fn new(count: u32) -> Self {
         let mut protons = [ProtonData::Unknown; 118];
+
         protons[0..(count as usize)]
             .iter_mut()
             .for_each(|p| *p = ProtonData::new(Proton::new()));
+
         Self { count, protons }
     }
 }
