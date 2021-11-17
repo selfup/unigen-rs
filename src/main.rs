@@ -32,6 +32,7 @@ impl ChargeMaterials {
             },
         }
     }
+
     fn get(&self, r: i8) -> &Handle<Material> {
         if r < 0 {
             &self.negative_mat
@@ -72,6 +73,7 @@ fn setup(
     let charged_mats = ChargeMaterials::new(materials);
 
     let blocks = builder::generate_universe(parsed_size);
+
     let mesh_handle = meshes.add(Mesh::from(shape::Icosphere {
         radius: 0.15,
         subdivisions: 1,
@@ -83,6 +85,7 @@ fn setup(
         let z = block.z as f32;
 
         let r = block.charge;
+
         commands
             .spawn(PbrBundle {
                 mesh: mesh_handle.clone(),
@@ -92,6 +95,7 @@ fn setup(
             })
             .with(block);
     }
+
     commands.insert_resource(charged_mats);
 
     commands
