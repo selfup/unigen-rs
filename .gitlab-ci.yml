@@ -5,4 +5,5 @@ rust-latest:
   stage: build
   image: rust:latest
   script:
+    - sudo apt-get install libasound2-dev
     - ./scripts/ci.sh
