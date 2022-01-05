@@ -12,7 +12,6 @@ Warming up!
 ---
 '
 
-
 time cargo run -q --release 260
 
 sleep 3s
