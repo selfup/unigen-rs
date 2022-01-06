@@ -1,3 +1,6 @@
+![github-pipeline](https://github.com/selfup/oxidizy/actions/workflows/rust.yml/badge.svg)
+![gitlab-pipeline](https://gitlab.com/selfup/oxidizy/badges/master/pipeline.svg)
+
 # Oxidizy
 
 An ambitious project to mimic the smaller things in life.
@@ -69,3 +72,8 @@ real    0m12.779s
 user    0m0.000s
 sys     0m0.000s
 ```
+
+### Repos
+
+Development Repo is on GitHub: https://github.com/selfup/oxidizy
+Backup/Archive Repo is on GitLab: https://gitlab.com/selfup/oxidizy
