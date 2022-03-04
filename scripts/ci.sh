@@ -1,36 +1,19 @@
 #!/usr/bin/env bash
 
-set -eo pipefail
-
-diff="rust updates"
-no_diff="no rust updates"
-gs_check=$(git status -s)
-rust_checks=$(
-    (echo $gs_check | grep -q -e '.rs' -e 'Cargo') && echo $diff || echo $no_diff
-)
+set -eou pipefail
 
 date
 
-if [[ $rust_checks == $no_diff ]]
-then
-    echo 'no need to run rust CI scripts..'
-    echo 'exiting succesfully..'
-    exit 0
-fi
+rustup component add rustfmt
 
-if [[ $rust_checks == $diff ]]
-then
-    rustup component add rustfmt
+echo 'running rustfmt'
 
-    echo 'running rustfmt'
+cargo fmt --all -- --check
 
-    cargo fmt
+echo 'format success!'
 
-    echo 'success!'
+echo 'running tests'
 
-    echo 'running tests'
+./scripts/test.sh
 
-    ./scripts/test.sh
-
-    exit 0
-fi
+echo 'ci success!'
