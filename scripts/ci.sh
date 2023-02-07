@@ -10,24 +10,26 @@ echo 'running rustfmt'
 
 cargo fmt --all -- --check
 
-echo 'format success!'
+echo 'rustfmt success!'
 
 echo 'running tests'
 
 ./scripts/test.sh
 
-echo 'ci success!'
+echo 'tests success!'
 
-sleep 1s
+echo 'running dev.generate'
 
-echo 'running generate with arg'
+./scripts/dev.generate.sh
+./scripts/dev.generate.sh 20
 
-./scripts/generate.sh 50
+echo 'dev.generate success!'
 
-echo 'generate with arg success!'
-
-echo 'running generate without arg'
+echo 'running generate'
 
 ./scripts/generate.sh
+./scripts/generate.sh 20
 
-echo 'generate without arg success!'
+echo 'generate success!'
+
+echo 'ci success!'
