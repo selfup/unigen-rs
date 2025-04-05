@@ -4,7 +4,7 @@ use rayon::prelude::*;
 
 pub mod core;
 
-use self::core::{Atom, neutron::Neutrons, proton::Protons, Block, Nucleus, Baryon};
+use self::core::{Atom, Baryon, Block, Nucleus, neutron::Neutrons, proton::Protons};
 
 const CHUNK_SIZE: usize = 128;
 
@@ -187,7 +187,7 @@ pub fn generate_universe(parsed_size: u32) -> Vec<Block> {
     println!("{}", &separator.green().bold());
 
     println!("Calculating charge of field..");
-    
+
     println!("{}", &separator.yellow().bold());
 
     let charge: Charge = Blocks::charge_of_field(&mut proton, &mut electron, parsed_size);
@@ -213,7 +213,7 @@ pub fn generate_universe(parsed_size: u32) -> Vec<Block> {
     println!("Atoms: {}", pretty_print_nums(&total_atoms));
     println!("Baryons: {}", pretty_print_nums(&total_baryons));
     println!("Quarks: {}", pretty_print_nums(&total_quarks));
-    
+
     println!("{}", &separator.magenta().bold());
 
     let total_objects: usize = &total_atoms + &total_baryons + &total_quarks;
