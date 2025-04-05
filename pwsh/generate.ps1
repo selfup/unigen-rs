@@ -3,11 +3,11 @@ param(
     [String]$size = "200"
 )
 
-cargo build --release --quiet --package unigen
+cargo build --release --quiet
 
 $sw = [Diagnostics.Stopwatch]::StartNew()
 
-cargo run --release --quiet --package unigen -- $size
+cargo run --release --quiet -- $size
 
 $sw.Stop()
 $sw.Elapsed

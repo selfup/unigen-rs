@@ -2,6 +2,6 @@
 
 set -eo pipefail
 
-cargo build --release --quiet --package unigen
+cargo build --release --quiet
 
-time cargo run --release --quiet --package unigen -- $1
+time cargo run --release --quiet $1

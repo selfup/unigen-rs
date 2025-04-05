@@ -3,6 +3,6 @@ param(
     [String]$size = "30"
 )
 
-cargo build --quiet --package unigen
+cargo build --quiet
 
-cargo run --quiet --package unigen -- $size
+cargo run --quiet $size
