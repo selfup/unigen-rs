@@ -1,4 +1,5 @@
 ![github-pipeline](https://github.com/selfup/unigen-rs/actions/workflows/rust.yml/badge.svg)
+![gitlab-pipeline](https://gitlab.com/selfup/unigen-rs/badges/main/pipeline.svg)
 
 # Unigen
 
