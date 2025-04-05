@@ -1,24 +1,6 @@
 use super::quark::{Quark, QuarkData};
 
 #[derive(Debug, Copy, Clone)]
-pub struct Neutrons {
-    pub count: u8,
-    pub neutrons: [NeutronData; 118],
-}
-
-impl Neutrons {
-    pub fn new(count: u8) -> Self {
-        let mut neutrons = [NeutronData::Unknown; 118];
-
-        neutrons[0..(count as usize)]
-            .iter_mut()
-            .for_each(|n| *n = NeutronData::new(Neutron::new()));
-
-        Self { count, neutrons }
-    }
-}
-
-#[derive(Debug, Copy, Clone)]
 pub struct Neutron {
     pub quarks: (Quark, Quark, Quark),
 }
@@ -34,6 +16,24 @@ impl Neutron {
 impl Default for Neutron {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct Neutrons {
+    pub count: u8,
+    pub neutrons: [NeutronData; 118],
+}
+
+impl Neutrons {
+    pub fn new(count: u8) -> Self {
+        let mut neutrons = [NeutronData::Unknown; 118];
+
+        neutrons[0..(count as usize)]
+            .iter_mut()
+            .for_each(|n| *n = NeutronData::new(Neutron::new()));
+
+        Self { count, neutrons }
     }
 }
 
@@ -71,6 +71,7 @@ pub enum NeutronData {
 }
 
 impl NeutronData {
+    #[inline]
     pub const fn new(neutron: Neutron) -> Self {
         let first_quark: QuarkData = Quark::data(neutron.quarks.0);
         let second_quark: QuarkData = Quark::data(neutron.quarks.1);

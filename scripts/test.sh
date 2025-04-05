@@ -5,8 +5,5 @@ set -euo pipefail
 # build for CI
 cargo build --verbose
 
-# simulator
+# unigen generate
 cargo test -- --nocapture
-
-# unigen
-( cd crates/unigen && exec cargo test -- --nocapture )

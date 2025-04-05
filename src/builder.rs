@@ -4,11 +4,13 @@ use rayon::prelude::*;
 
 pub mod core;
 
-use self::core::{neutron, proton};
+use self::core::{Atom, neutron::Neutrons, proton::Protons, Block, Nucleus, Baryon};
 
-pub struct Blocks {}
 const CHUNK_SIZE: usize = 128;
 
+pub struct Blocks {}
+
+#[inline]
 fn index_to_xyz(parsed_size: u32, idx: u32) -> (u32, u32, u32) {
     let sz_2 = parsed_size * parsed_size;
     let x = idx / sz_2;
@@ -18,34 +20,38 @@ fn index_to_xyz(parsed_size: u32, idx: u32) -> (u32, u32, u32) {
     (x, y, z)
 }
 
+pub enum Charge {
+    Neutral,
+    Anionic,
+    Cationic,
+}
+
 impl Blocks {
-    pub fn initialize_universe(parsed_size: u32) -> Vec<core::Block> {
+    pub fn initialize_universe(parsed_size: u32) -> Vec<Block> {
         let total_size: u32 = parsed_size
             .checked_mul(parsed_size.checked_mul(parsed_size).unwrap())
             .unwrap();
 
-        let vec_size = total_size as usize;
-        let mut ret = Vec::with_capacity(vec_size);
+        let vec_size: usize = total_size as usize;
+        let mut container: Vec<Block> = Vec::with_capacity(vec_size);
 
-        println!("Threads: {}\nBuilding..", rayon::current_num_threads());
-
-        ret.par_extend((0..total_size).into_par_iter().map(|i| {
+        container.par_extend((0..total_size).into_par_iter().map(|i| {
             let (x, y, z) = index_to_xyz(parsed_size, i);
             let (electrons, protons, neutrons): (u8, u8, u8) = (0, 0, 0);
 
-            let generated_protons = proton::Protons::new(protons);
-            let generated_neutrons = neutron::Neutrons::new(neutrons);
+            let generated_protons = Protons::new(protons);
+            let generated_neutrons = Neutrons::new(neutrons);
 
-            core::Block {
+            Block {
                 id: i,
                 x: x as i32,
                 y: y as i32,
                 z: z as i32,
                 charge: 0,
-                atom: core::Atom {
+                atom: Atom {
                     electrons,
-                    nucleus: core::Nucleus {
-                        baryon: core::Baryon {
+                    nucleus: Nucleus {
+                        baryon: Baryon {
                             protons: generated_protons,
                             neutrons: generated_neutrons,
                         },
@@ -53,11 +59,12 @@ impl Blocks {
                 },
             }
         }));
-        ret
+
+        container
     }
 
     pub fn particles(
-        universe: &mut [core::Block],
+        universe: &mut [Block],
         neutron: &mut [u32; 1],
         proton: &mut [u32; 1],
         electron: &mut [u32; 1],
@@ -83,19 +90,19 @@ impl Blocks {
         });
     }
 
-    pub fn charge_of_field(proton: &mut [u32; 1], electron: &mut [u32; 1], u: u32) {
+    pub fn charge_of_field(proton: &mut [u32; 1], electron: &mut [u32; 1], u: u32) -> Charge {
         let size: u32 = u * u * u;
 
         if proton[0] == size && electron[0] == size {
-            println!("Field is Netural");
+            Charge::Neutral
         } else if (proton[0] > size) && (electron[0] < proton[0]) {
-            println!("Field is Cationic");
+            Charge::Cationic
         } else {
-            println!("Field is Anionic");
+            Charge::Anionic
         }
     }
 
-    pub fn atom_charge(universe: &mut [core::Block]) {
+    pub fn atom_charge(universe: &mut [Block]) {
         universe.par_chunks_mut(CHUNK_SIZE).for_each(|chunk| {
             for block in chunk {
                 calculate_charge(block)
@@ -103,7 +110,7 @@ impl Blocks {
         });
     }
 
-    pub fn tick(universe: &mut [core::Block]) {
+    pub fn tick(universe: &mut [Block]) {
         universe
             .par_chunks_mut(CHUNK_SIZE)
             .for_each_init(rand::rng, |rng, chunk| {
@@ -115,8 +122,9 @@ impl Blocks {
 }
 
 #[inline]
-pub fn calculate_charge(block: &mut core::Block) {
+pub fn calculate_charge(block: &mut Block) {
     use std::cmp::Ordering::*;
+
     block.charge = match u8::cmp(
         &block.atom.nucleus.baryon.protons.count,
         &block.atom.electrons,
@@ -127,7 +135,8 @@ pub fn calculate_charge(block: &mut core::Block) {
     }
 }
 
-pub fn mutate_blocks_with_new_particles<R: Rng>(rng: &mut R, block: &mut core::Block) {
+#[inline]
+pub fn mutate_blocks_with_new_particles<R: Rng>(rng: &mut R, block: &mut Block) {
     let (electrons, protons, neutrons, rotation): (u8, u8, u8, u8) = (
         rng.random_range(0..118),
         rng.random_range(0..118),
@@ -146,11 +155,11 @@ pub fn mutate_blocks_with_new_particles<R: Rng>(rng: &mut R, block: &mut core::B
     }
 
     block.atom.electrons = electrons;
-    block.atom.nucleus.baryon.protons = proton::Protons::new(protons);
-    block.atom.nucleus.baryon.neutrons = neutron::Neutrons::new(neutrons);
+    block.atom.nucleus.baryon.protons = Protons::new(protons);
+    block.atom.nucleus.baryon.neutrons = Neutrons::new(neutrons);
 }
 
-pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
+pub fn generate_universe(parsed_size: u32) -> Vec<Block> {
     let separator: &str = "--------------------------------";
 
     println!("{}", &separator.magenta().bold());
@@ -159,7 +168,9 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     let mut proton: [u32; 1] = [0];
     let mut electron: [u32; 1] = [0];
 
-    let mut generated_universe = Blocks::initialize_universe(parsed_size);
+    println!("Threads: {}\nBuilding..", rayon::current_num_threads());
+
+    let mut generated_universe: Vec<Block> = Blocks::initialize_universe(parsed_size);
 
     Blocks::tick(&mut generated_universe);
     Blocks::particles(
@@ -172,34 +183,46 @@ pub fn generate_universe(parsed_size: u32) -> Vec<core::Block> {
     println!("{}", &separator.yellow().bold());
 
     println!("Universe built");
+
     println!("{}", &separator.green().bold());
 
     println!("Calculating charge of field..");
+    
     println!("{}", &separator.yellow().bold());
 
-    Blocks::charge_of_field(&mut proton, &mut electron, parsed_size);
+    let charge: Charge = Blocks::charge_of_field(&mut proton, &mut electron, parsed_size);
+
+    match charge {
+        Charge::Neutral => println!("Field is Netural"),
+        Charge::Cationic => println!("Field is Cationic"),
+        Charge::Anionic => println!("Field is Anionic"),
+    }
+
     Blocks::atom_charge(&mut generated_universe);
 
     println!("{}", &separator.green().bold());
 
-    let default_baryons = 236;
-    let quarks_per_baryon = 3;
-    let generated_universe_length = generated_universe.len();
+    let default_baryons: usize = 236;
+    let quarks_per_baryon: usize = 3;
+    let generated_universe_length: usize = generated_universe.len();
 
-    let total_atoms = generated_universe_length;
-    let total_baryons = generated_universe_length * default_baryons;
-    let total_quarks = generated_universe_length * default_baryons * quarks_per_baryon;
+    let total_atoms: usize = generated_universe_length;
+    let total_baryons: usize = generated_universe_length * default_baryons;
+    let total_quarks: usize = generated_universe_length * default_baryons * quarks_per_baryon;
 
     println!("Atoms: {}", pretty_print_nums(&total_atoms));
     println!("Baryons: {}", pretty_print_nums(&total_baryons));
     println!("Quarks: {}", pretty_print_nums(&total_quarks));
+    
     println!("{}", &separator.magenta().bold());
 
-    let total_objects = &total_atoms + &total_baryons + &total_quarks;
+    let total_objects: usize = &total_atoms + &total_baryons + &total_quarks;
+
     println!(
         "Total high-level objects in memory: {}",
         pretty_print_nums(&total_objects)
     );
+
     println!("{}", &separator.green().bold());
 
     generated_universe
@@ -241,7 +264,7 @@ fn it_can_pretty_print_large_numbers() {
 
 #[test]
 fn it_can_begin() {
-    let universe = Blocks::initialize_universe(5);
+    let universe: Vec<Block> = Blocks::initialize_universe(5);
 
     assert_eq!(universe.len(), 125);
 
@@ -260,7 +283,7 @@ fn it_can_infer_the_charge_of_an_atom() {
     let mut proton: [u32; 1] = [0];
     let mut electron: [u32; 1] = [0];
 
-    let mut generated_universe: Vec<core::Block> = Blocks::initialize_universe(5);
+    let mut generated_universe: Vec<Block> = Blocks::initialize_universe(5);
 
     Blocks::tick(&mut generated_universe);
 
@@ -282,7 +305,7 @@ fn it_can_sense_the_field() {
     let mut proton: [u32; 1] = [0];
     let mut electron: [u32; 1] = [0];
 
-    let mut universe = Blocks::initialize_universe(2);
+    let mut universe: Vec<Block> = Blocks::initialize_universe(2);
 
     Blocks::particles(&mut universe, &mut neutron, &mut proton, &mut electron);
 
