@@ -212,3 +212,58 @@ fn it_can_match_a_single_proton_correctly() {
 
     assert_eq!(first_proton, ProtonData::RedGreenBlueUpUpDownQuark);
 }
+
+#[test]
+fn test_proton_new() {
+    let proton = Proton::new();
+
+    assert_eq!(Quark::data(proton.quarks.0), QuarkData::RedUpQuark);
+    assert_eq!(Quark::data(proton.quarks.1), QuarkData::GreenUpQuark);
+    assert_eq!(Quark::data(proton.quarks.2), QuarkData::BlueDownQuark);
+}
+
+#[test]
+fn test_proton_default() {
+    let proton = Proton::default();
+
+    assert_eq!(Quark::data(proton.quarks.0), QuarkData::RedUpQuark);
+    assert_eq!(Quark::data(proton.quarks.1), QuarkData::GreenUpQuark);
+    assert_eq!(Quark::data(proton.quarks.2), QuarkData::BlueDownQuark);
+}
+
+#[test]
+fn test_protons_new_with_different_counts() {
+    let protons_0 = Protons::new(0);
+
+    assert_eq!(protons_0.count, 0);
+    for proton in protons_0.protons.iter() {
+        assert_eq!(*proton, ProtonData::Unknown);
+    }
+
+    let protons_1 = Protons::new(1);
+
+    assert_eq!(protons_1.count, 1);
+
+    assert_eq!(protons_1.protons[0], ProtonData::RedGreenBlueUpUpDownQuark);
+
+    for proton in protons_1.protons.iter().skip(1) {
+        assert_eq!(*proton, ProtonData::Unknown);
+    }
+
+    let protons_max = Protons::new(118);
+
+    assert_eq!(protons_max.count, 118);
+
+    for proton in protons_max.protons.iter() {
+        assert_eq!(*proton, ProtonData::RedGreenBlueUpUpDownQuark);
+    }
+}
+
+#[test]
+fn test_proton_data_new_unknown() {
+    let proton = Proton {
+        quarks: (Quark::new(4, 0), Quark::new(1, 1), Quark::new(2, 0)),
+    };
+
+    assert_eq!(ProtonData::new(proton), ProtonData::Unknown);
+}

@@ -314,3 +314,14 @@ fn it_can_sense_the_field() {
     assert_eq!(proton.len(), 1);
     assert_eq!(electron.len(), 1);
 }
+
+#[test]
+fn it_can_calculate_xyz_from_index() {
+    let size = 5;
+
+    assert_eq!(index_to_xyz(size, 0), (0, 0, 0));
+    assert_eq!(index_to_xyz(size, 1), (0, 0, 1));
+    assert_eq!(index_to_xyz(size, 5), (0, 1, 0));
+    assert_eq!(index_to_xyz(size, 25), (1, 0, 0));
+    assert_eq!(index_to_xyz(size, 124), (4, 4, 4));
+}
