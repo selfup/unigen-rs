@@ -212,3 +212,62 @@ fn it_can_match_a_single_neutron_correctly() {
 
     assert_eq!(first_neutron, NeutronData::RedGreenBlueUpDownDownQuark);
 }
+
+#[test]
+fn test_neutron_new() {
+    let neutron = Neutron::new();
+
+    assert_eq!(Quark::data(neutron.quarks.0), QuarkData::RedUpQuark);
+    assert_eq!(Quark::data(neutron.quarks.1), QuarkData::GreenDownQuark);
+    assert_eq!(Quark::data(neutron.quarks.2), QuarkData::BlueDownQuark);
+}
+
+#[test]
+fn test_neutron_default() {
+    let neutron = Neutron::default();
+
+    assert_eq!(Quark::data(neutron.quarks.0), QuarkData::RedUpQuark);
+    assert_eq!(Quark::data(neutron.quarks.1), QuarkData::GreenDownQuark);
+    assert_eq!(Quark::data(neutron.quarks.2), QuarkData::BlueDownQuark);
+}
+
+#[test]
+fn test_neutrons_new_with_different_counts() {
+    let neutrons_0 = Neutrons::new(0);
+
+    assert_eq!(neutrons_0.count, 0);
+
+    for neutron in neutrons_0.neutrons.iter() {
+        assert_eq!(*neutron, NeutronData::Unknown);
+    }
+
+    let neutrons_1 = Neutrons::new(1);
+
+    assert_eq!(neutrons_1.count, 1);
+
+    assert_eq!(
+        neutrons_1.neutrons[0],
+        NeutronData::RedGreenBlueUpDownDownQuark
+    );
+
+    for neutron in neutrons_1.neutrons.iter().skip(1) {
+        assert_eq!(*neutron, NeutronData::Unknown);
+    }
+
+    let neutrons_max = Neutrons::new(118);
+
+    assert_eq!(neutrons_max.count, 118);
+
+    for neutron in neutrons_max.neutrons.iter() {
+        assert_eq!(*neutron, NeutronData::RedGreenBlueUpDownDownQuark);
+    }
+}
+
+#[test]
+fn test_neutron_data_new_unknown() {
+    let neutron = Neutron {
+        quarks: (Quark::new(4, 0), Quark::new(1, 0), Quark::new(2, 0)),
+    };
+
+    assert_eq!(NeutronData::new(neutron), NeutronData::Unknown);
+}

@@ -161,3 +161,21 @@ fn it_infers_the_correct_combination_of_charges() {
     let quark_data = Quark::data(quark);
     assert_eq!(quark_data, QuarkData::AlphaUpQuark);
 }
+
+#[test]
+fn it_infers_quark_data_unknown_for_invalid_strong_charge() {
+    let quark = Quark::new(5, 0);
+    assert_eq!(Quark::data(quark), QuarkData::Unknown);
+}
+
+#[test]
+fn it_infers_quark_data_unknown_for_invalid_electric_charge() {
+    let quark = Quark::new(0, 2);
+    assert_eq!(Quark::data(quark), QuarkData::Unknown);
+}
+
+#[test]
+fn it_infers_quark_data_unknown_for_unknown_strong_and_electric_charge() {
+    let quark = Quark::new(5, 2);
+    assert_eq!(Quark::data(quark), QuarkData::Unknown);
+}
