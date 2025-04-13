@@ -5,7 +5,6 @@ pub struct Quark {
 }
 
 impl Quark {
-    #[inline]
     pub const fn new(color_charge: u8, electric_charge: u8) -> Quark {
         Quark {
             color: StrongCharge::new(color_charge),
@@ -65,7 +64,6 @@ pub enum StrongCharge {
 }
 
 impl StrongCharge {
-    #[inline]
     pub const fn new(color: u8) -> StrongCharge {
         match color {
             0 => StrongCharge::Red,
@@ -85,7 +83,6 @@ pub enum ElectricCharge {
 }
 
 impl ElectricCharge {
-    #[inline]
     pub const fn new(charge: u8) -> ElectricCharge {
         match charge {
             0 => ElectricCharge::NegativeOneThird,
