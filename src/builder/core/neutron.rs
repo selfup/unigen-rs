@@ -71,7 +71,6 @@ pub enum NeutronData {
 }
 
 impl NeutronData {
-    #[inline]
     pub const fn new(neutron: Neutron) -> Self {
         let first_quark: QuarkData = Quark::data(neutron.quarks.0);
         let second_quark: QuarkData = Quark::data(neutron.quarks.1);
