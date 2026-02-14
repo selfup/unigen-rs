@@ -1,11 +1,11 @@
 [package]
 name = "unigen"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["selfup <boudinot.regis@yahoo.com>"]
 edition = "2024"
 repository = "https://github.com/selfup/unigen-rs"
 
 [dependencies]
-rand = "0.9.2"
+rand = "0.10.0"
 rayon = "1.11.0"
-colored = "3.0.0"
+colored = "3.1.1"

@@ -1,5 +1,5 @@
 use colored::*;
-use rand::Rng;
+use rand::{Rng, RngExt};
 use rayon::prelude::*;
 
 pub mod core;
