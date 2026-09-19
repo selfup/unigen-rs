@@ -480,7 +480,7 @@ checksum = "d245f478577f809a851594d02313b640fb437e0bb33866753cff937863096954"
 
 [[package]]
 name = "unigen"
-version = "0.4.3"
+version = "0.4.4"
 dependencies = [
  "colored",
  "criterion",
