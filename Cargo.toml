@@ -1,11 +1,18 @@
 [package]
 name = "unigen"
-version = "0.4.3"
+version = "0.4.4"
 authors = ["selfup <boudinot.regis@yahoo.com>"]
 edition = "2024"
 repository = "https://github.com/selfup/unigen-rs"
 
 [dependencies]
-rand = "0.10.1"
+rand = "0.10.2"
 rayon = "1.12.0"
 colored = "3.1.1"
+
+[dev-dependencies]
+criterion = { version = "0.8", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "universe"
+harness = false

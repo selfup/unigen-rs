@@ -4,6 +4,9 @@ use rayon::prelude::*;
 
 pub mod core;
 
+#[cfg(test)]
+mod tests;
+
 use self::core::{Atom, Baryon, Block, Nucleus, neutron::Neutrons, proton::Protons};
 
 const CHUNK_SIZE: usize = 128;
@@ -20,6 +23,7 @@ fn index_to_xyz(parsed_size: u32, idx: u32) -> (u32, u32, u32) {
     (x, y, z)
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum Charge {
     Neutral,
     Anionic,
@@ -90,15 +94,13 @@ impl Blocks {
         });
     }
 
-    pub fn charge_of_field(proton: &mut [u32; 1], electron: &mut [u32; 1], u: u32) -> Charge {
-        let size: u32 = u * u * u;
-
-        if proton[0] == size && electron[0] == size {
-            Charge::Neutral
-        } else if (proton[0] > size) && (electron[0] < proton[0]) {
-            Charge::Cationic
-        } else {
-            Charge::Anionic
+    /// Classifies the field by its total proton and electron counts.
+    /// The size argument is retained for API compatibility and does not affect charge.
+    pub fn charge_of_field(proton: &mut [u32; 1], electron: &mut [u32; 1], _u: u32) -> Charge {
+        match proton[0].cmp(&electron[0]) {
+            std::cmp::Ordering::Equal => Charge::Neutral,
+            std::cmp::Ordering::Greater => Charge::Cationic,
+            std::cmp::Ordering::Less => Charge::Anionic,
         }
     }
 
