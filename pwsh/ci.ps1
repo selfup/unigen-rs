@@ -14,6 +14,13 @@ Write-Output 'running tests'
 
 Write-Output 'tests success!'
 
+Write-Output 'running benchmark smoke tests'
+
+cargo bench --locked --bench universe -- --test
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+Write-Output 'benchmark smoke tests success!'
+
 Write-Output 'running dev.generate'
 
 .\pwsh\dev.generate.ps1

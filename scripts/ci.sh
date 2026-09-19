@@ -18,6 +18,12 @@ echo 'running tests'
 
 echo 'tests success!'
 
+echo 'running benchmark smoke tests'
+
+cargo bench --locked --bench universe -- --test
+
+echo 'benchmark smoke tests success!'
+
 echo 'running dev.generate'
 
 ./scripts/dev.generate.sh
